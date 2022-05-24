@@ -1,0 +1,92 @@
+	PROGRAMMING 4 NOTES: WEEK 10
+
+Allocators feedback
+
+-FixedSizeAllocator should be O(1)
+	->No need to itterate to get something big enough bc size is already decided
+
+-StackBasedAllocator 
+	->No need for a release function
+	->You overwrite bc it's a stack
+	->ReleaseToMarker() is fine
+
+-FixedSizeAllocator
+	->Size is fixed, so no need for size parameter in aquire function
+	->Size is already established in constructor
+	->(nrBytes + blocksize-1)/blocksize
+		->example of integer division, rounding up
+
+-FixedSizeAllocator Worse
+	->No need to make the same as SingleLinkedAllocator
+
+-Test Wrong?
+	-> new allocates the memory and calls the constructor
+	->deletes calls the destructor and deallocates
+	-> DON'T FORGET DELETE
+
+-Wut?
+	->int = 4 bytes	
+
+
+
+
+-STACKALLOCATOR
+	-constructor -> give stack size
+	-Marker -> points to the top
+	-Aquire 
+		->check if enough memory
+		->increase top
+		->alloc and return
+	-Free to marker
+		->check if marker is valid
+		->set new marker
+
+-FIXEDSIZEALLOCATOR
+	-constructor
+		->Size of each block
+		->number of blocks
+	-aquire
+		->next points to first free block
+		->return that block
+
+
+C++ CODING STANDARTS
+	-Construction, deconstruction and copying
+		-47
+			->try clang instead of VS
+				->might tell you what went wrong
+		-51
+			->Before move constructor
+				->Swap was used instead
+				->move can also not fail!
+		-52
+			->Rule of three
+				(-> by extention rule of 5)
+		-54
+			->Make base copy constructor explicit is a solution
+				->Not fullproof
+			->Make sure to read this rule
+	
+	-Namespaces and modules
+		-61
+			-> entity with linkage
+				->Something that takes up memory
+	
+`	-Error handling and exceptions
+		-68
+			-> Do not change variables in an assert
+				->Line gets deleted in release
+
+LOCALIZATION
+	I18N -> internationalization
+	L10N -> localization
+
+	Encoding?
+		->if between first code point and last code point...
+			->See table on slides
+	Exercise
+
+
+EXTRA COMMENTS DURING FEEDBACK MOMENT
+	-time.h already exists in directory files
+	-Careful for name collisions
