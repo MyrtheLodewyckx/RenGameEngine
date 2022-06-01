@@ -12,11 +12,13 @@
 #include <fstream>
 #include <regex>
 #include "Plate.h"
+#include "Player.h"
+#include "TextComponent.h"
 
 
 void dae::LevelManager::CreatePlayer(glm::vec3 pos, Scene& scene, int controllerIdx) const
 {
-	const int playerSize = 50;
+	const int playerSize = 30;
 	auto player = std::make_shared<GameObject>();
 	auto spriteCom = player->AddComponent<SpriteComponent>();
 
@@ -136,6 +138,52 @@ void dae::LevelManager::CreateEnemy(SDL_Rect hitbox, Scene& scene, EnemyID id) c
 	scene.Add(enemy);
 }
 
+void dae::LevelManager::CreateHUD(glm::vec3 pos, Scene* scene, int controllerIdx) const
+{
+	auto HUD = std::make_shared<GameObject>();
+	auto player = HUD->AddComponent<Player>();
+	auto font = ResourceManager::GetInstance().LoadFont("pixel.otf", 20);
+
+
+	player->SetControllerIdx(controllerIdx);
+
+	//TEXT COMPONENT
+	auto HUDTextCom = HUD->AddComponent<TextComponent>();
+	std::string sHUDtext = "LIVES: " + std::to_string(player->GetLives());
+
+	HUDTextCom->SetFont(font);
+	HUDTextCom->SetText(sHUDtext);
+
+	//TRANSFORM COMPONENT
+	auto sHUDTransformCom = HUD->AddComponent<Transform>();
+	sHUDTransformCom->SetPosition(pos);
+
+	//TEXTURE COMPONENT
+	HUD->AddComponent<TextureComponent>();
+
+	scene->Add(HUD);
+
+	//CHILD COMPONENT SCORE TEXT
+	auto scoreHUD = std::make_shared<GameObject>();
+	scoreHUD->SetParent(HUD.get());
+
+	//TEXT COMPONENT
+	auto scoreHUDTextCom = scoreHUD->AddComponent<TextComponent>();
+	std::string scoreHUDtext = "SCORE: " + std::to_string(player->GetScore());
+
+	scoreHUDTextCom->SetFont(font);
+	scoreHUDTextCom->SetText(scoreHUDtext);
+
+	//TRANSFORM COMPONENT
+	auto scoreHUDTransformCom = scoreHUD->AddComponent<Transform>();
+	scoreHUDTransformCom->SetPosition(pos.x + 300, pos.y, pos.z);
+
+	//TEXTURE COMPONENT
+	scoreHUD->AddComponent<TextureComponent>();
+
+	scene->Add(scoreHUD);
+}
+
 void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 {
 	std::regex info{ ".+\\(([0-9]+),([0-9]+)\\)\\(([0-9]+),([0-9]+)\\)" };
@@ -181,12 +229,16 @@ void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 						CreateBurgerPart(SDL_Rect(std::stoi(match[1]), std::stoi(match[2]), std::stoi(match[3]), std::stoi(match[4])), "sprites/meat.png", scene);
 						break;
 					}
+					break;
 				}
 				case 'E':
 					CreateEnemy(SDL_Rect(std::stoi(match[1]), std::stoi(match[2]), std::stoi(match[3]), std::stoi(match[4])), scene, EnemyID(line[1] - '0'));
+					break;
 				}
 		}
 		levelFile.close();
-	}
 
+		CreatePlayer(glm::vec3(240, 599, 0), scene, 0);
+		CreateHUD(glm::vec3(100, 10, 0), &scene, 0);
+	}
 }

@@ -19,6 +19,9 @@
 #include "Platform.h"
 #include "BurgerPart.h"
 #include "LevelManager.h"
+#include "GameStateManager.h"
+#include "MainMenu.h"
+#include "Options.h"
 
 using namespace std;
 
@@ -65,43 +68,46 @@ void dae::Minigin::Initialize()
  */
 void dae::Minigin::LoadGame() const
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
-	int windowWidth{};
-	int windowHeight{};
-	SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
-	auto font = ResourceManager::GetInstance().LoadFont("pixel.otf", 20);
+	//auto& scene = SceneManager::GetInstance().CreateScene("Demo");
+	
+	//auto scene = std::make_unique<Scene>();
+	//int windowWidth{};
+	//int windowHeight{};
+	//SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
+	//auto font = ResourceManager::GetInstance().LoadFont("pixel.otf", 20);
 
-	auto backgroundParent = std::make_shared<GameObject>();
+	//auto backgroundParent = std::make_shared<GameObject>();
 
-	//ADD FPS COUNTER
-	auto fps = std::make_shared<GameObject>();
+	////ADD FPS COUNTER
+	//auto fps = std::make_shared<GameObject>();
 
-	auto fpsText = fps->AddComponent<TextComponent>();
-	fpsText->SetFont(font);
-	fpsText->SetText("0 FPS");
+	//auto fpsText = fps->AddComponent<TextComponent>();
+	//fpsText->SetFont(font);
+	//fpsText->SetText("0 FPS");
 
-	fps->AddComponent<TextureComponent>();
+	//fps->AddComponent<TextureComponent>();
 
-	auto fpsPos = fps->AddComponent<Transform>();
-	fpsPos->SetPosition(10, 20, 0);
+	//auto fpsPos = fps->AddComponent<Transform>();
+	//fpsPos->SetPosition(10, 20, 0);
 
-	fps->AddComponent<FPSCounter>();
+	//fps->AddComponent<FPSCounter>();
 
-	scene.Add(fps);
+	//scene->Add(fps);
 
-	LevelManager::GetInstance().LoadLevel("lvl1.txt",scene);
+	//LevelManager::GetInstance().LoadLevel("lvl1.txt",*scene.get());
+	////ADD PETER PEPPER HUD
+	//CreateHUD(glm::vec3(100,10, 0), scene.get(), 0);
 
-	/*CreateLadder(SDL_Rect(windowWidth / 2, 149, 55, 202), scene);
-	CreatePlatform(SDL_Rect(0, 150, 500, 5), scene);
-	CreatePlatform(SDL_Rect(0, 350, windowWidth, 5), scene);
+	////ADD PETER PEPPER
+	//CreatePlayer(glm::vec3(240, 599, 0), scene.get(), 0);
 
-	CreateBurgerPart(SDL_Rect(149, 150, 70, 20), "sprites/bun.png", scene);*/
+	//GameStateManager::GetInstance().Add(std::move(scene));
+	//GameStateManager::GetInstance().ProcessStateChange();
 
-	//ADD PETER PEPPER HUD
-	CreateHUD(glm::vec3(100,10, 0), scene, 0);
+	auto mainMenu = std::make_unique<MainMenu>();
+	GameStateManager::GetInstance().Add(std::move(mainMenu));
+	GameStateManager::GetInstance().ProcessStateChange();
 
-	//ADD PETER PEPPER
-	CreatePlayer(glm::vec3(240, 579, 0), scene, 0);
 
 	//ADD SALLY SALT HUD
 	//CreateHUD(glm::vec3((float)windowWidth - 170, 200, 0), scene, 1);
@@ -132,11 +138,10 @@ void dae::Minigin::Run()
 
 	{
 		auto& renderer = Renderer::GetInstance();
-		auto& sceneManager = SceneManager::GetInstance();
-		auto& eventManager = dae::EventManager::GetInstance();
-
-		auto inputPtr = new XInputManager();
-		InputServiceLocator::register_Input(inputPtr);
+		//auto& sceneManager = SceneManager::GetInstance();
+		auto& eventManager = EventManager::GetInstance();
+		auto& stateManager = GameStateManager::GetInstance();
+		auto& inputManager = InputManager::GetInstance();
 
 		bool doContinue = true;
 		auto timeLast = chrono::high_resolution_clock::now();
@@ -149,26 +154,28 @@ void dae::Minigin::Run()
 			//Get delta time
 			auto timeNow = chrono::high_resolution_clock::now();
 			auto deltaTime = timeNow - timeLast;
-			doContinue = inputPtr->ProcessInput();
+			doContinue = inputManager.ProcessInput();
 
-			inputPtr->HandleInputs();
-			sceneManager.Update(chrono::duration<float>(deltaTime).count());
+			inputManager.HandleInputs();
+			stateManager.GetCurrent()->HandleInput();
+			stateManager.GetCurrent()->Update(chrono::duration<float>(deltaTime).count());
 			AudioServiceLocator::Update();
 			renderer.Render();
 
+			stateManager.ProcessStateChange();
 			eventManager.ProcessEvents();
+
 			//Update timeLast
 			timeLast = timeNow;
 		}
-		delete inputPtr;
+
 		delete ss;
-		inputPtr = nullptr;
 		ss = nullptr;
 	}
 	Cleanup();
 }
 
-void dae::Minigin::CreateHUD(glm::vec3 pos, Scene &scene, int controllerIdx) const
+void dae::Minigin::CreateHUD(glm::vec3 pos, Scene* scene, int controllerIdx) const
 {
 	auto HUD = std::make_shared<GameObject>();
 	auto player = HUD->AddComponent<Player>();
@@ -191,7 +198,7 @@ void dae::Minigin::CreateHUD(glm::vec3 pos, Scene &scene, int controllerIdx) con
 		//TEXTURE COMPONENT
 	HUD->AddComponent<TextureComponent>();
 
-	scene.Add(HUD);
+	scene->Add(HUD);
 
 	//CHILD COMPONENT SCORE TEXT
 	auto scoreHUD = std::make_shared<GameObject>();
@@ -211,12 +218,12 @@ void dae::Minigin::CreateHUD(glm::vec3 pos, Scene &scene, int controllerIdx) con
 		//TEXTURE COMPONENT
 	scoreHUD->AddComponent<TextureComponent>();
 
-	scene.Add(scoreHUD);
+	scene->Add(scoreHUD);
 }
 
-void dae::Minigin::CreatePlayer(glm::vec3 pos, Scene& scene, int controllerIdx) const
+void dae::Minigin::CreatePlayer(glm::vec3 pos, Scene* scene, int controllerIdx) const
 {
-	const int playerSize = 50;
+	const int playerSize = 30;
 	auto player = std::make_shared<GameObject>();
 	auto spriteCom = player->AddComponent<SpriteComponent>();
 
@@ -233,5 +240,5 @@ void dae::Minigin::CreatePlayer(glm::vec3 pos, Scene& scene, int controllerIdx) 
 	physics->SetControllerIdx(controllerIdx);
 	physics->SetDimentions(playerSize, playerSize);
 
-	scene.Add(player);
+	scene->Add(player);
 }

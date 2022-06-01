@@ -20,6 +20,12 @@ dae::BurgerPart::BurgerPart(GameObject* go)
 	m_ObjectList.emplace_back(this);
 }
 
+dae::BurgerPart::~BurgerPart()
+{
+	auto newEnd = std::remove(m_ObjectList.begin(), m_ObjectList.end(), this);
+	m_ObjectList.erase(newEnd, m_ObjectList.end());
+}
+
 void dae::BurgerPart::Update(const float deltaTime)
 {
 	//MAKE SURE EVERYTHING IS INITIALIZED

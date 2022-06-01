@@ -6,7 +6,7 @@ dae::Texture2D::~Texture2D()
 	SDL_DestroyTexture(m_Texture);
 }
 
-float dae::Texture2D::GetWidth()
+float dae::Texture2D::GetWidth() const
 {
 	SDL_Point size{};
 	SDL_QueryTexture(m_Texture,NULL,NULL,&size.x,&size.y);
@@ -14,7 +14,7 @@ float dae::Texture2D::GetWidth()
 	return (float)size.x;
 }
 
-float dae::Texture2D::GetHeight()
+float dae::Texture2D::GetHeight() const
 {
 	SDL_Point size{};
 	SDL_QueryTexture(m_Texture, NULL, NULL, &size.x, &size.y);

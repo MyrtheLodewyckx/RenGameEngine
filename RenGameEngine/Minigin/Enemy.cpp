@@ -45,13 +45,32 @@ void dae::Enemy::HandlePlayerCollision()
 
 	for (auto player : players)
 	{
-		if (Collision::IsOverlapping(SDL_Rect(m_pTransform->GetPosition().x, (int)m_pTransform->GetPosition().y, m_Width, m_Height), SDL_Rect(player->GetHitBox())))
+		if (Collision::IsOverlapping(SDL_Rect((int)m_pTransform->GetPosition().x, (int)m_pTransform->GetPosition().y, m_Width, m_Height), SDL_Rect(player->GetHitBox())))
 		{
 			PlayerDiesEvent* e = new PlayerDiesEvent{};
 			e->controllerIdx = player->GetControllerIdx();
 			dae::EventManager::GetInstance().AddEvent(e);
 		}
 	}
+}
+
+void dae::Enemy::HandleStun(const float deltaTime)
+{
+	m_pSprite->SetSprite(m_Sprites[3], (float)m_Width, (float)m_Height);
+
+	float stunTime{ 5.f };
+	m_Timer += deltaTime;
+
+	if (m_Timer >= stunTime)
+	{
+		m_IsStunned = false;
+		m_Timer = 0.f;
+	}
+}
+
+void dae::Enemy::SetIsStunned(bool b)
+{
+	m_IsStunned = b;
 }
 
 SDL_Rect dae::Enemy::GetHitBox()
@@ -73,28 +92,34 @@ std::vector<dae::Enemy*> dae::Enemy::GetAllInstances()
 
 void dae::Enemy::SetValues(EnemyID id, int height, int width)
 {
+	auto& resourceManager = dae::ResourceManager::GetInstance();
+
 	switch (id)
 	{
 	case EnemyID::MrHotDog:
-		m_pClimbingDownTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/SausageWalkingForward.png");
-		m_pClimbingUpTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/SausageClimbingUp.png");
-		m_pWalkingTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/SausageWalking.png");
+		m_pClimbingDownTexture = resourceManager.LoadTexture("sprites/SausageWalkingForward.png");
+		m_pClimbingUpTexture = resourceManager.LoadTexture("sprites/SausageClimbingUp.png");
+		m_pWalkingTexture = resourceManager.LoadTexture("sprites/SausageWalking.png");
+		m_pStunnedTexture = resourceManager.LoadTexture("sprites/SausageStunned.png");
 		break;
 	case EnemyID::MrEgg:
-		m_pClimbingDownTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/EggWalkingForward.png");
-		m_pClimbingUpTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/EggClimbingUp.png");
-		m_pWalkingTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/EggWalking.png");
+		m_pClimbingDownTexture = resourceManager.LoadTexture("sprites/EggWalkingForward.png");
+		m_pClimbingUpTexture = resourceManager.LoadTexture("sprites/EggClimbingUp.png");
+		m_pWalkingTexture = resourceManager.LoadTexture("sprites/EggWalking.png");
+		m_pStunnedTexture = resourceManager.LoadTexture("sprites/EggStunned.png");
 		break;
 	case EnemyID::MrPickle:
-		m_pClimbingDownTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/PickleWalkingForward.png");
-		m_pClimbingUpTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/PickleClimbingUp.png");
-		m_pWalkingTexture = dae::ResourceManager::GetInstance().LoadTexture("sprites/PickleWalking.png");
+		m_pClimbingDownTexture = resourceManager.LoadTexture("sprites/PickleWalkingForward.png");
+		m_pClimbingUpTexture = resourceManager.LoadTexture("sprites/PickleClimbingUp.png");
+		m_pWalkingTexture = resourceManager.LoadTexture("sprites/PickleWalking.png");
+		m_pStunnedTexture = resourceManager.LoadTexture("sprites/EggStunned.png");
 		break;
 	}
 
 	m_Sprites[0].texturePtr = m_pClimbingDownTexture;
 	m_Sprites[1].texturePtr = m_pWalkingTexture;
 	m_Sprites[2].texturePtr = m_pClimbingUpTexture;
+	m_Sprites[3].texturePtr = m_pStunnedTexture;
 
 	m_Height = height;
 	m_Width = width;
@@ -106,6 +131,12 @@ dae::Enemy::Enemy(GameObject* go)
 	m_ObjectList.emplace_back(this);
 }
 
+dae::Enemy::~Enemy()
+{
+	auto newEnd = std::remove(m_ObjectList.begin(), m_ObjectList.end(), this);
+	m_ObjectList.erase(newEnd, m_ObjectList.end());
+}
+ 
 void dae::Enemy::Update(const float deltaTime)
 {
 	if (!m_pTransform)
@@ -114,8 +145,13 @@ void dae::Enemy::Update(const float deltaTime)
 	if(!m_pSprite)
 		m_pSprite = m_Go->GetComponent<SpriteComponent>();
 
-	HandleMovement(deltaTime);
-	HandlePlayerCollision();
+	if (m_IsStunned)
+		HandleStun(deltaTime);
+	else
+	{
+		HandleMovement(deltaTime);
+		HandlePlayerCollision();
+	}
 }
 
 void dae::Enemy::SetIsOverLadder(int ladderIndex)

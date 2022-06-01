@@ -24,7 +24,13 @@ void dae::Player::DecrementLives()
 	if (lives == 0)
 	{
 		Event* e = new Event{};
-		e->ID = (int)Events::GAME_OVER;
+		e->ID = Events::GAME_OVER;
+		dae::EventManager::GetInstance().AddEvent(e);
+	}
+	else
+	{
+		Event* e = new Event{};
+		e->ID = Events::RESTART_LEVEL;
 		dae::EventManager::GetInstance().AddEvent(e);
 	}
 }
@@ -54,17 +60,17 @@ void dae::Player::HandleEvents()
 
 	switch (e->ID)
 	{
-	case (int)Events::PLAYER_DIES:
+	case Events::PLAYER_DIES:
 	{
 		auto p = dynamic_cast<PlayerDiesEvent*>(e);
 		if (p->controllerIdx == m_ControllerIdx)
 			DecrementLives();
 		break;
 	}
-	case (int)Events::PLAYER_GAINS_LIFE:
+	case Events::PLAYER_GAINS_LIFE:
 		IncrementLives();
 		break;
-	case (int)Events::SCORE_CHANGE:
+	case Events::SCORE_CHANGE:
 	{
 		auto p = dynamic_cast<ScoreChangeEvent*>(e);
 		if (p->controllerIdx == m_ControllerIdx)

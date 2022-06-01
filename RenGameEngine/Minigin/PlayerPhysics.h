@@ -11,7 +11,7 @@ namespace dae
 	{
 		static std::vector<PlayerPhysics*> m_ObjectList;
 
-		int m_ControllerIdx{ 0 };
+		int m_PlayerIdx{ 0 };
 		Transform* m_TransformPtr = nullptr;
 		SpriteComponent* m_Sprite = nullptr;
 		float m_Height, m_Width = 0;
@@ -26,20 +26,25 @@ namespace dae
 			{m_pWalkingTexture,1,3,0.5f},
 			{m_pClimbingUpTexture,1,3,0.5f}
 		};
+		int m_PepperCharges{ 3 };
 
 	public:
 
+		bool m_IsLeft = false;
 		bool m_IsOnLadder = false;
 		bool m_IsOnGround = true;
-		int GetControllerIdx() const { return m_ControllerIdx; };
+		int GetControllerIdx() const { return m_PlayerIdx; };
 
 		static std::vector<PlayerPhysics*> GetAllInstances() { return m_ObjectList; }
+		static PlayerPhysics* GetPlayer(int playerIdx);
 
 		virtual void Update(const float) override;
 		virtual void Render() const override {};
 
+		void ThrowPepper();
+
 		void SetDimentions(float height, float width);
-		void SetControllerIdx(int idx) { m_ControllerIdx = idx; };
+		void SetControllerIdx(int idx) { m_PlayerIdx = idx; };
 
 		SDL_Rect GetHitBox();
 		glm::vec3 GetPos() const;
@@ -48,7 +53,7 @@ namespace dae
 		void HandlePhysics(const float deltaTime);
 
 		PlayerPhysics(GameObject* go);
-		~PlayerPhysics() = default;
+		~PlayerPhysics();
 		PlayerPhysics(const PlayerPhysics& other) = delete;
 		PlayerPhysics(PlayerPhysics&& other) = delete;
 		PlayerPhysics& operator=(const PlayerPhysics& other) = delete;

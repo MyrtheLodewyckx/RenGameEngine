@@ -24,5 +24,6 @@ namespace dae
 		virtual void Render() const override;
 		void SetDimentions(int height, int width);
 		Ladder(GameObject* go);
+		~Ladder();
 	};
 }

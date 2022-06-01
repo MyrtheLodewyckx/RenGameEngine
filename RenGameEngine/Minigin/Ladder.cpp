@@ -18,6 +18,12 @@ dae::Ladder::Ladder(GameObject* go)
 	m_ObjectList.push_back(this);
 }
 
+dae::Ladder::~Ladder()
+{
+	auto newEnd = std::remove(m_ObjectList.begin(), m_ObjectList.end(), this);
+	m_ObjectList.erase(newEnd, m_ObjectList.end());
+}
+
 const void dae::Ladder::HandlePlayerCollision()
 {
 	auto players = PlayerPhysics::GetAllInstances();

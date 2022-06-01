@@ -20,6 +20,7 @@ namespace dae
 
 	public:
 		BurgerPart(GameObject* go);
+		~BurgerPart();
 		virtual void Update(const float deltaTime) override;
 		virtual void Render() const override;
 		void SetDimentions(int width, int height);

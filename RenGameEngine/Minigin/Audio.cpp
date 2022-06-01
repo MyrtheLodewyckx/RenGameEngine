@@ -4,9 +4,15 @@
 #include <thread>
 #include <mutex>
 #include <sdl_mixer.h>
+#include <future>
 
 null_sound_system AudioServiceLocator::default_instance;
 sound_system* AudioServiceLocator::ss_instance = &default_instance;
+
+const int sound_system::MAX_CLIPS = 30;
+int sound_system::m_Head = 0;
+int sound_system::m_Tail = 0;
+std::vector<AudioClip*> sound_system::m_Clips{};
 
 AudioClip clips[]
 {
@@ -18,35 +24,70 @@ AudioClip clips[]
 //PIMPL
 class sdl_sound_system::SDLImpl
 {
-	std::jthread m_Thread;
 	Mix_Chunk* m_ChunkPtrs[sizeof(clips) / sizeof(AudioClip)]{};
-	void LoadThread(int ID) 
-	{ m_ChunkPtrs[ID] = Mix_LoadWAV(clips[ID].GetPath().c_str()); };
+	std::mutex lock{};
+	std::mutex sleepThreadMutex{};
+	std::condition_variable readyCondVar{};
+	bool ReadyFlag{ false };
+
+	void Load(int ID);
+	void HandleRequests();
+
 
 public:
-	SDLImpl() {};
-	~SDLImpl() {};
+	SDLImpl() { Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096); };
+	~SDLImpl() { Mix_CloseAudio(); };
 
-	bool IsLoaded(int ID);
-	void Load(int ID);
-	void Play(int ID);
+	void Play(int ID, const int volume);
 	void SetVolume(int ID, int volume);
-
+	void Update();
 };
-
-bool sdl_sound_system::SDLImpl::IsLoaded(int ID)
-{
-	return m_ChunkPtrs[ID] == nullptr ? false : true;
-}
 
 void sdl_sound_system::SDLImpl::Load(int ID)
 {
-	m_Thread = std::jthread(&SDLImpl::LoadThread,this, ID);
+	m_ChunkPtrs[ID] = Mix_LoadWAV(clips[ID].GetPath().c_str());
 }
 
-void sdl_sound_system::SDLImpl::Play(int ID)
+void sdl_sound_system::SDLImpl::HandleRequests()
 {
-	Mix_PlayChannel(-1, m_ChunkPtrs[ID], 0);
+	while (m_Head != m_Tail)
+	{
+		//bool r = ReadyFlag;
+		//std::unique_lock<std::mutex> ul(sleepThreadMutex);
+		//readyCondVar.wait(ul, [r]() {return m_Head != m_Tail; });
+
+		int ID = m_Clips[m_Head]->GetId();
+
+		if (!m_ChunkPtrs[ID])
+			Load(ID);
+		
+		SetVolume(ID,m_Clips[m_Head]->GetVolume());
+		Mix_PlayChannel(-1, m_ChunkPtrs[ID], 0);
+
+
+		std::lock_guard<std::mutex> lg(lock);
+		m_Head = (m_Head + 1) % MAX_CLIPS;
+	}
+} 
+
+void sdl_sound_system::SDLImpl::Play(int ID, const int volume)
+{
+	assert((m_Tail + 1) % MAX_CLIPS != m_Head);
+
+	for (int i = m_Head; i != m_Tail; i = (i + 1) % MAX_CLIPS)
+	{
+		if (m_Clips[i]->GetId() == ID)
+			return;
+	}
+
+	sleepThreadMutex.lock();
+	clips[ID].SetVolume(volume);
+	m_Clips[m_Tail] = &clips[ID];
+	m_Tail = (m_Tail + 1) % MAX_CLIPS;
+	sleepThreadMutex.unlock();
+
+	readyCondVar.notify_one();
+	
 }
 
 void sdl_sound_system::SDLImpl::SetVolume(int ID, int volume)
@@ -54,64 +95,33 @@ void sdl_sound_system::SDLImpl::SetVolume(int ID, int volume)
 	Mix_VolumeChunk(m_ChunkPtrs[ID], volume);
 }
 
+void sdl_sound_system::SDLImpl::Update()
+{
+	auto f = std::async(std::launch::async,&SDLImpl::HandleRequests, this); 
+
+}
+
 
 
 sdl_sound_system::sdl_sound_system()
 {
-	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
+	m_Clips.resize(MAX_CLIPS);
 	m_pImpl = new SDLImpl();
 }
 
 sdl_sound_system::~sdl_sound_system()
 {
-	Mix_CloseAudio();
 	delete m_pImpl;
 	m_pImpl = nullptr;
 }
 
 void sdl_sound_system::Play(const int soundId, const int volume)
 {
-	assert((g_Tail + 1) % MAX_CLIPS != g_Head);
-
-	for (int i = g_Head; i != g_Tail; i = (i + 1) % MAX_CLIPS)
-	{
-		if (g_Clips[i]->GetId() == soundId)
-			return;
-	}
-
-	std::mutex lock;
-
-	lock.lock();
-	g_Clips[g_Tail] = &clips[soundId];
-	lock.unlock();
-
-	if (!m_pImpl->IsLoaded(g_Clips[g_Tail]->GetId()))
-		m_pImpl->Load(g_Clips[g_Tail]->GetId());
-
-	//Check again for multi-threading reasons
-	if (m_pImpl->IsLoaded(g_Clips[g_Tail]->GetId()))
-	m_pImpl->SetVolume(g_Clips[g_Tail]->GetId(), volume);
-
-	lock.lock();
-	g_Tail = (g_Tail + 1) % MAX_CLIPS;
-	lock.unlock();
+	m_pImpl->Play(soundId, volume);
 }
 
 void sdl_sound_system::Update()
 {
-	std::mutex lock;
-
-	// If there are no pending requests, do nothing.
-	if (g_Head == g_Tail) return;
-
-	//Check again for multi-threading reasons
-	if (m_pImpl->IsLoaded(g_Clips[g_Head]->GetId()))
-	{
-		m_pImpl->Play(g_Clips[g_Head]->GetId());
-
-		lock.lock();
-		g_Head = (g_Head + 1) % MAX_CLIPS;
-		lock.unlock();
-	}
+	m_pImpl->Update();
 }
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Subject.h"
 #include "EventManager.h"
+#include "PlayerPhysics.h"
 
 class Command
 {
@@ -11,11 +12,14 @@ public:
 };
 
 
-class Jump :public Command
+class ThrowPepper :public Command
 {
 public:
-	~Jump() {};
-	virtual void Execute(int) override { std::cout << "JUMP EXECUTED\n"; };
+	~ThrowPepper() {};
+	virtual void Execute(int controllerIdx) override 
+	{ 
+		dae::PlayerPhysics::GetPlayer(controllerIdx)->ThrowPepper();
+	};
 };
 
 class Select :public Command
@@ -25,7 +29,7 @@ public:
 	virtual void Execute(int) override 
 	{ 
 		Event* e = new Event{};
-		e->ID = (int)Events::BUTTON_SELECT;
+		e->ID = Events::BUTTON_SELECT;
 		dae::EventManager::GetInstance().AddEvent(e);
 	};
 };
@@ -62,7 +66,7 @@ public:
 	virtual void Execute(int) override
 	{
 		Event* e = new Event{};
-		e->ID = (int)Events::GAME_PAUSE;
+		e->ID = Events::GAME_PAUSE;
 		dae::EventManager::GetInstance().AddEvent(e);
 	}
 };

@@ -22,5 +22,6 @@ namespace dae
 		void SetDimentions(int width, int height);
 		SDL_Rect GetDimentions() { return m_HitBox; }
 		Platform(GameObject* go);
+		~Platform();
 	};
 }

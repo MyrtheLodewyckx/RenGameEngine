@@ -16,6 +16,12 @@ dae::Platform::Platform(GameObject* go)
     m_ObjectList.push_back(this);
 }
 
+dae::Platform::~Platform()
+{
+    auto newEnd = std::remove(m_ObjectList.begin(), m_ObjectList.end(), this);
+    m_ObjectList.erase(newEnd, m_ObjectList.end());
+}
+
 
 void dae::Platform::HandlePlayerCollision()
 {

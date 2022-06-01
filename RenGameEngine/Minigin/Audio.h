@@ -7,32 +7,34 @@ enum SoundId
 	SCORE_UP
 };
 
-class AudioClip 
+class AudioClip
 {
 	int m_Id;
+	int m_Volume;
 	std::string m_Path;
 public:
 
 	AudioClip(int id, const std::string& path) :m_Path{ path }, m_Id{ id } {}
 	~AudioClip() {}
 
+	void SetVolume(int volume) { m_Volume = volume; }
+	int GetVolume() { return m_Volume; }
 	int GetId() { return (int)m_Id; }
 	std::string GetPath() { return m_Path; }
 };
 
-//SHOULDNOTBEGLOBAL
-static const int MAX_CLIPS = 30;
-static int g_Head{ 0 };
-static int g_Tail{ 0 };
-static AudioClip* g_Clips[MAX_CLIPS];
-
 
 class sound_system
 {
+protected:
+	static const int MAX_CLIPS;
+	static int m_Head;
+	static int m_Tail;
+	static std::vector<AudioClip*> m_Clips;
+
 public:
-	virtual ~sound_system() = default;
-	virtual void Play(const int, const int) { std::cout << "sound error"; }
-	virtual void Update() {}
+	virtual void Play(const int, const int) = 0;
+	virtual void Update() = 0;
 };
 
 class null_sound_system : public sound_system

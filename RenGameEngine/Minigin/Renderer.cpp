@@ -2,51 +2,16 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_sdl.h"
-#include "Imgui/imgui_impl_opengl2.h"
-#include "Imgui/imgui_plot.h"
 #include  <chrono>
 #include "GameObject3D.h"
 #include <gl/GL.h>
+#include "GameStateManager.h"
 
 std::vector<float> results1{};
 std::vector<float> results2{};
 
 int m_AmtOfSteps{11};
 
-void DisplayExcersize(const char* title, const char* buttonText, ImColor color, std::vector<float> &results, std::vector<float>(*func)());
-
-std::vector<float> Excersize1();
-
-std::vector<float> Excersize2();
-
-void SetGraph(std::vector<float> y_data, ImColor color)
-{
-	std::vector<float> x_data{};
-	float step{ 1 };
-	for (unsigned int i{}; i < y_data.size(); ++i)
-	{
-		step *= 2;
-		x_data.push_back(step);
-	}
-
-	ImGui::PlotConfig conf;
-	conf.values.xs = x_data.data();
-	conf.values.ys = y_data.data();
-	conf.values.count = 11;
-	conf.values.color = color;
-	conf.scale.min = 0;
-	conf.scale.max = *std::max_element(y_data.begin(), y_data.end());;
-	conf.tooltip.show = true;
-	conf.tooltip.format = "x=%.2f, y=%.2f";
-	conf.grid_x.show = false;
-	conf.grid_y.show = false;
-	conf.frame_size = ImVec2(200, 200);
-	conf.line_thickness = 3.f;
-
-	ImGui::Plot("plot", conf);
-}
 
 int GetOpenGLDriverIndex()
 {
@@ -71,10 +36,7 @@ void dae::Renderer::Init(SDL_Window * window)
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
-	ImGui_ImplOpenGL2_Init();
+	
 }
 
 void dae::Renderer::Render() const
@@ -83,29 +45,16 @@ void dae::Renderer::Render() const
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
 
-	SceneManager::GetInstance().Render();
-
-	/*ImGui_ImplOpenGL2_NewFrame();
-	ImGui_ImplSDL2_NewFrame(m_Window);
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
-	{
-		DisplayExcersize("Excersize 1", "Trash that cashe: integers", ImColor(250, 100, 5), results1, &Excersize1);
-		DisplayExcersize("Excersize 2", "Trash that cashe: GameObject3D", ImColor(100, 250, 5), results2, &Excersize2);
-	}
-	ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());*/
-	
+	GameStateManager::GetInstance().GetCurrent()->Render();
 	
 	SDL_RenderPresent(m_Renderer);
 }
 
 void dae::Renderer::Destroy()
 {
-	ImGui_ImplOpenGL2_Shutdown();
+	/*ImGui_ImplOpenGL2_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
+	ImGui::DestroyContext();*/
 	if (m_Renderer != nullptr)
 	{
 		SDL_DestroyRenderer(m_Renderer);
@@ -122,14 +71,16 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, float x, float y, float width, float height, SDL_RendererFlip flip) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0, 0, flip);
 }
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, const float sourceX, const float sourceY, const float sourceWidth, const float sourceHeight, SDL_RendererFlip flip) const
@@ -150,19 +101,19 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &srt, &dst, 0, 0, flip);
 }
 
-void DisplayExcersize(const char* title, const char* buttonText, ImColor color, std::vector<float> &results, std::vector<float>(*func)())
-{
-	ImGui::Begin(title, nullptr);
-	if (ImGui::Button(buttonText))
-	{
-		if (results.size() == 0)
-			results = func();
-		else results.clear();
-	}
-	if (results.size() > 0)
-		SetGraph(results, color);
-	ImGui::End();
-}
+//void DisplayExcersize(const char* title, const char* buttonText, ImColor color, std::vector<float> &results, std::vector<float>(*func)())
+//{
+//	ImGui::Begin(title, nullptr);
+//	if (ImGui::Button(buttonText))
+//	{
+//		if (results.size() == 0)
+//			results = func();
+//		else results.clear();
+//	}
+//	if (results.size() > 0)
+//		SetGraph(results, color);
+//	ImGui::End();
+//}
 
 std::vector<float> Excersize1()
 {
