@@ -1,22 +1,10 @@
 #pragma once
 #include "Command.h"
 #include <map>
+#include "XBoxController.h"
 
 namespace dae
 {
-	enum class ControllerButton
-	{
-		ButtonA = 0x1000,
-		ButtonB = 0x2000,
-		ButtonX = 0x4000,
-		ButtonY = 0x8000,
-
-		DPAD_UP = 0x0001,
-		DPAD_DOWN = 0x0002,
-		DPAD_LEFT = 0x0004,
-		DPAD_RIGHT = 0x0008,
-		ButtonMenu = 0x0010
-	};
 	enum class Direction
 	{
 		None,
@@ -26,28 +14,33 @@ namespace dae
 		Right
 	};
 
-	class InputManager abstract
+	class InputManager: public Singleton<InputManager>
 	{
-	protected:
+	private:
+		//ALL INPUT DEVICES
+		std::unique_ptr<XBoxController> m_pXBox_controllers;
 
 		static const int maxPlayers = 2;
 		Direction m_direction[maxPlayers] = {};
 
-		Jump* m_JumpCommand = new Jump{};
+		ThrowPepper* m_PepperCommand = new ThrowPepper{};
 		Select* m_SingCommand = new Select{};
 		Dance* m_DanceCommand = new Dance{};
 		Die* m_DieCommand = new Die{};
 
 		std::map<ControllerButton, Command*> m_ConsoleCommandMap
 		{
-			{ControllerButton::ButtonB,m_JumpCommand},
+			{ControllerButton::ButtonB,m_DanceCommand},
 			{ControllerButton::ButtonA, m_SingCommand},
-			{ControllerButton::ButtonY,m_DanceCommand},
+			{ControllerButton::ButtonY,m_PepperCommand},
 			{ControllerButton::ButtonX, m_DieCommand}
 		};
 
 	public:
-		InputManager() {}
+		InputManager()
+		{
+			m_pXBox_controllers = std::make_unique<XBoxController>();
+		}
 		~InputManager() 
 		{
 			for (auto b : m_ConsoleCommandMap)
@@ -79,63 +72,15 @@ namespace dae
 		};
 		Direction GetJoystickDirection(int controllerIdx) { return m_direction[controllerIdx]; }
 
-		virtual bool ProcessInput() = 0;
-		virtual bool IsPressed(ControllerButton button, int controllerIdx) const = 0;
-		virtual bool IsDown(ControllerButton button) const = 0;
+		bool ProcessInput();
+		bool IsPressed(ControllerButton button, int controllerIdx) const;
+	/*	bool IsDown(ControllerButton button, int controllerIdx) const {}
+		bool IsUp(ControllerButton button, int controllerIdx) const {}*/
 
-		virtual void HandleInputs() = 0;
-	};
-
-
-	//IS A CONTROLLER NOT AN INPUT MANAGER
-	//COMPOSITION OVER INHERITANCE
-	class XInputManager :public InputManager
-	{
-		class XInputImpl;
-		XInputImpl* m_pImpl{};
-
-	public:
-		XInputManager();
-		~XInputManager();
-
-		virtual bool ProcessInput() override;
-		bool IsPressed(ControllerButton button, int controllerIdx) const override;
-		virtual bool IsDown(ControllerButton button) const override;
-		 
-		virtual void HandleInputs() override;
-	};
-
-	class InputServiceLocator
-	{
-		static InputManager* i_instance;
-
-	public:
-		InputServiceLocator() = delete;
-		~InputServiceLocator() = delete;
-		InputServiceLocator(const InputServiceLocator& other) = delete;
-		InputServiceLocator(InputServiceLocator&& other) = delete;
-		InputServiceLocator& operator=(const InputServiceLocator& other) = delete;
-		InputServiceLocator& operator=(InputServiceLocator&& other) = delete;
-		static InputManager& get_input_system()
-		{
-				return *i_instance;
-		}
-		static void register_Input(InputManager* ss)
-		{
-			i_instance = ss;
-		}
-
-		static bool ProcessInputs() 
-		{
-			return i_instance->ProcessInput();
-		}
-
-		static void HandleInputs()
-		{
-			i_instance->HandleInputs();
-		}
+		void HandleInputs();
 	};
 }
 
 
 
+//IMPLEMENT FUNCTIONS!!!!!

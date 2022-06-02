@@ -7,15 +7,27 @@
 #include "GameStateManager.h"
 #include "Renderer.h"
 
-
 class Options : public dae::GameState
 {
-	std::vector<std::shared_ptr<dae::Texture2D>> m_GameModeTexture;
-	std::shared_ptr<dae::Font> m_Font;
-	std::shared_ptr<dae::Texture2D> m_pArrowButtonTexture;
+	
+	std::shared_ptr<dae::Font> m_Font{};
+
+	std::vector<std::shared_ptr<dae::Texture2D>> m_GameModeTexture{};
+	std::vector<std::shared_ptr<dae::Texture2D>> m_InputDevicesTexture{};
+
+	std::shared_ptr<dae::Texture2D> m_pArrowButtonTexture{};
+	std::shared_ptr<dae::Texture2D> m_pPlayer1{};
+	std::shared_ptr<dae::Texture2D> m_pPlayer2{};
+	std::shared_ptr<dae::Texture2D> m_pPeterHeadIcon{};
+
 	dae::InputManager& m_InputManagerRef{ dae::InputManager::GetInstance()};
 	dae::GameMode& m_GameModeRef{ dae::GameStateManager::GetInstance().GetGameMode()};
 	dae::Renderer& m_RendererRef{ dae::Renderer::GetInstance() };
+
+	int m_Player1SelectedInputDevice{ 0 };
+	int m_Player2SelectedInputDevice{ 0 };
+
+	int m_lvls{ 0 };
 
 public:
 	Options();

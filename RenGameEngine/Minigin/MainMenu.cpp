@@ -33,11 +33,11 @@ void MainMenu::Init()
 
 void MainMenu::HandleInput()
 {
-	auto j = dae::InputManager::GetInstance().GetJoystickDirection(0);
+	auto j = dae::InputManager::GetInstance().GetPlayerDirection(0);
 
-	if (j == dae::Direction::Up || dae::InputManager::GetInstance().IsPressed(dae::ControllerButton::DPAD_UP, 0))
+	if (j == dae::Direction::Up)
 		m_ActiveButtonId = MainMenuButtons(((unsigned int)m_ActiveButtonId - 1)%(int)MainMenuButtons::COUNT);
-	if (j == dae::Direction::Down || dae::InputManager::GetInstance().IsPressed(dae::ControllerButton::DPAD_DOWN, 0))
+	if (j == dae::Direction::Down)
 		m_ActiveButtonId = MainMenuButtons(((unsigned int)m_ActiveButtonId + 1)%(int)MainMenuButtons::COUNT);
 }
 

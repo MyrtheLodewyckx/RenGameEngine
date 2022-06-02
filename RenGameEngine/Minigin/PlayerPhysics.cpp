@@ -93,7 +93,7 @@ void dae::PlayerPhysics::HandlePhysics(const float deltaTime)
 	const int verticalSpeed{ 60 };
 	Movement movement;
 
-	auto j = InputManager::GetInstance().GetJoystickDirection(m_PlayerIdx);
+	auto j = InputManager::GetInstance().GetPlayerDirection(m_PlayerIdx);
 
 	if (!m_TransformPtr)
 		m_TransformPtr = m_Go->GetComponent<Transform>();

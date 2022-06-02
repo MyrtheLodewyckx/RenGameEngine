@@ -165,6 +165,9 @@
     <ClInclude Include="Options.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>UserInput</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MiniginPCH.cpp">
@@ -257,9 +260,6 @@
     <ClCompile Include="BurgerPart.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Plate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Movement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -272,17 +272,23 @@
     <ClCompile Include="GameStateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>UserInput</Filter>
     </ClCompile>
     <ClCompile Include="XBoxController.cpp">
       <Filter>UserInput</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
     <ClCompile Include="Options.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Plate.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>UserInput</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

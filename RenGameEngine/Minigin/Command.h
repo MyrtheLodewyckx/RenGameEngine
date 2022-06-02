@@ -4,6 +4,8 @@
 #include "EventManager.h"
 #include "PlayerPhysics.h"
 
+using namespace dae;
+
 class Command
 {
 public: 
@@ -16,11 +18,13 @@ class ThrowPepper :public Command
 {
 public:
 	~ThrowPepper() {};
-	virtual void Execute(int controllerIdx) override 
+	virtual void Execute(int playerIdx) override 
 	{ 
-		dae::PlayerPhysics::GetPlayer(controllerIdx)->ThrowPepper();
+		PlayerPhysics::GetPlayer(playerIdx)->ThrowPepper();
 	};
 };
+
+
 
 class Select :public Command
 {
@@ -30,32 +34,7 @@ public:
 	{ 
 		Event* e = new Event{};
 		e->ID = Events::BUTTON_SELECT;
-		dae::EventManager::GetInstance().AddEvent(e);
-	};
-};
-
-class Dance :public Command
-{
-public:
-	~Dance() {};
-	virtual void Execute(int controllerIdx) override
-	{ 
-		ScoreChangeEvent* e = new ScoreChangeEvent{};
-		e->amt = 10;
-		e->controllerIdx = controllerIdx;
-		dae::EventManager::GetInstance().AddEvent(e);
-	};
-};
-
-class Die :public Command
-{
-public:
-	~Die() {};
-	virtual void Execute(int controllerIdx) override
-	{ 
-		PlayerDiesEvent* e = new PlayerDiesEvent{};
-		e->controllerIdx = controllerIdx;
-		dae::EventManager::GetInstance().AddEvent(e);
+		EventManager::GetInstance().AddEvent(e);
 	};
 };
 
@@ -67,6 +46,6 @@ public:
 	{
 		Event* e = new Event{};
 		e->ID = Events::GAME_PAUSE;
-		dae::EventManager::GetInstance().AddEvent(e);
+		EventManager::GetInstance().AddEvent(e);
 	}
 };
