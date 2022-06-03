@@ -27,8 +27,9 @@ namespace dae
 
 		void ProcessInput() const;
 		bool IsPressed(ControllerButton button, int controllerIdx) const;
-		bool IsDown(ControllerButton button) const;
+		bool IsDown(ControllerButton button, int controllerIdx) const;
 		void GetLeftJoystickInput(int controllerIdx, int& XAxis, int& YAxis) const;
 		void GetRightJoystickInput(int controllerIdx, int& XAxis, int& YAxis) const;
+		void GetJoystickEnterInputDirection(int controllerIdx, int& XAxis, int& YAxis) const;
 	};
 }

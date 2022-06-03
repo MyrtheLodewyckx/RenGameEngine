@@ -1,17 +1,17 @@
 #include "MiniginPCH.h"
-#include "Player.h"
+#include "HUDinfo.h"
 #include "EventManager.h"
 #include "TextComponent.h"
 #include "Transform.h"
 #include "Audio.h"
 #include "InputManager.h"
 
-void dae::Player::IncrementLives()
+void dae::HUD::IncrementLives()
 {
 	++lives;
 }
 
-void dae::Player::DecrementLives()
+void dae::HUD::DecrementLives()
 {
 	--lives;
 
@@ -35,7 +35,7 @@ void dae::Player::DecrementLives()
 	}
 }
 
-void dae::Player::ChangeScore(int amt)
+void dae::HUD::ChangeScore(int amt)
 {
 	score += amt;
 	std::string newstr = "SCORE: " + std::to_string(score);
@@ -46,12 +46,12 @@ void dae::Player::ChangeScore(int amt)
 	a->Play((int)SoundId::SCORE_UP, 50);
 }
 
-void dae::Player::Update(const float)
+void dae::HUD::Update(const float)
 {
 	HandleEvents();
 }
 
-void dae::Player::HandleEvents()
+void dae::HUD::HandleEvents()
 {
 	auto e = dae::EventManager::GetEvent();
 

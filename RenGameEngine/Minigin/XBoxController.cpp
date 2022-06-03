@@ -15,7 +15,9 @@ public:
 	bool IsPressed(ControllerButton button, int controllerIdx) const;
 	void GetLeftJoystickInput(int controllerIdx, int& XAxis, int& YAxis) const;
 	void GetRightJoystickInput(int controllerIdx, int& XAxis, int& YAxis) const;
-	bool IsDown(ControllerButton button) const;
+	//void GetRightJoystickEnterEvent(int controllerIdx, int& XAxis, int& YAxis) const;
+	//void GetLeftJoystickEnterEvent(int controllerIdx, int& XAxis, int& YAxis) const;
+	bool IsDown(ControllerButton button, int controllerIdx) const;
 	int GetMaxControllers() { return XUSER_MAX_COUNT; }
 };
 
@@ -68,14 +70,11 @@ void dae::XBoxController::XInputImpl::GetRightJoystickInput(int controllerIdx, i
 	YAxis = currentState[controllerIdx].Gamepad.sThumbRY;
 }
 
-bool dae::XBoxController::XInputImpl::IsDown(ControllerButton button) const
+bool dae::XBoxController::XInputImpl::IsDown(ControllerButton button, int controllerIdx) const
 {
-	for (int i = 0; i < XUSER_MAX_COUNT; ++i)
+	if (WORD(button) == currentState[controllerIdx].Gamepad.wButtons)
 	{
-		if (WORD(button) == lastState[i].Gamepad.wButtons)
-		{
-			return true;
-		}
+		return true;
 	}
 	return false;
 }
@@ -105,9 +104,9 @@ bool dae::XBoxController::IsPressed(ControllerButton button, int controllerIdx) 
 	return m_pImpl->IsPressed(button, controllerIdx);
 }
 
-bool dae::XBoxController::IsDown(ControllerButton button) const
+bool dae::XBoxController::IsDown(ControllerButton button, int controllerIdx) const
 {
-	return m_pImpl->IsDown(button);
+	return m_pImpl->IsDown(button,controllerIdx);
 }
 
 void dae::XBoxController::GetLeftJoystickInput(int controllerIdx, int& XAxis, int& YAxis) const
@@ -119,3 +118,12 @@ void dae::XBoxController::GetRightJoystickInput(int controllerIdx, int& XAxis, i
 {
 	m_pImpl->GetRightJoystickInput(controllerIdx, XAxis, YAxis);
 }
+
+void dae::XBoxController::GetJoystickEnterInputDirection(int, int&, int&) const
+{
+}
+
+
+
+//IMPLEMENT JOYSTICK ENTER FUNCTION!!!
+

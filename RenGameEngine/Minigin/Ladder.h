@@ -17,6 +17,7 @@ namespace dae
 		SDL_Rect m_HitBox{0,0,0,0};
 
 		const void HandlePlayerCollision();
+		const void HandleOnePlayerCollision(PlayerPhysics* player);
 		const void HandleEnemyCollision();
 
 	public:

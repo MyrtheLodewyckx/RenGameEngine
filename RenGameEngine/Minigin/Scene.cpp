@@ -8,8 +8,8 @@
 using namespace dae;
 
 
-dae::Scene::Scene()
-	:m_Objects{}
+dae::Scene::Scene(int lvl)
+	:m_Objects{}, m_Level{lvl}
 {
 }
 
@@ -33,9 +33,19 @@ void Scene::Update(const float deltaTime)
 	switch (e->ID)
 	{
 	case Events::RESTART_LEVEL:
-		auto scene = std::make_unique<dae::Scene>();
+	{
+		auto scene = std::make_unique<dae::Scene>(1);
 		dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
 		dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+	}
+		break;
+	case Events::NEXT_LEVEL:
+	{
+		auto scene = std::make_unique<dae::Scene>(++m_Level);
+		std::string lvlFile = "lvl" + std::to_string(m_Level) + ".txt";
+		dae::LevelManager::GetInstance().LoadLevel(lvlFile, *scene.get());
+		dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+	}
 		break;
 	}
 

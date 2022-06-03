@@ -32,13 +32,12 @@ void dae::Keyboard::SDLInputImpl::ProcessInput()
 bool dae::Keyboard::SDLInputImpl::IsPressed(SDL_Scancode key) const
 {
 	return (currentState.key.keysym.scancode == key && currentState.type == SDL_KEYDOWN);
-
-	//return currentState[key];
 }
 
 bool dae::Keyboard::SDLInputImpl::IsDown(SDL_Scancode key) const
 {
-	return (currentState.key.keysym.scancode == key);
+	const Uint8* keystate = SDL_GetKeyboardState(NULL);
+	return keystate[key];
 }
 
 
@@ -65,5 +64,5 @@ bool dae::Keyboard::IsPressed(SDL_Scancode key) const
 
 bool dae::Keyboard::IsDown(SDL_Scancode key) const
 {
-	return m_pImpl->IsPressed(key);
+	return m_pImpl->IsDown(key);
 }

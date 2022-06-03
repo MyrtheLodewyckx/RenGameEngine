@@ -29,6 +29,9 @@ class Options : public dae::GameState
 
 	int m_lvls{ 0 };
 
+	void ControllerUpdate();
+	void KeyboardUpdate();
+
 public:
 	Options();
 	~Options();

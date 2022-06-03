@@ -242,7 +242,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="HUDinfo.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="TextComponent.h" />
@@ -327,7 +327,7 @@
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="Plate.cpp" />
     <ClCompile Include="Platform.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="HUDinfo.cpp" />
     <ClCompile Include="PlayerPhysics.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />

@@ -6,13 +6,58 @@
 #include "Imgui/imgui_plot.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
-#include "InputManager.h"
 #include "GameStateManager.h"
 #include "Scene.h"
 #include "LevelManager.h"
 #include "GameStateManager.h"
 #include "Options.h"
 
+
+void MainMenu::ControllerUpdate()
+{
+	if (m_InputManagerRef.IsPressed(dae::ControllerButton::ButtonA,0))
+	{
+		switch (m_ActiveButtonId)
+		{
+		case MainMenuButtons::PLAY:
+		{
+			auto scene = std::make_unique<dae::Scene>(1);
+			dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
+			dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+		}
+		break;
+		case MainMenuButtons::OPTIONS:
+		{
+			auto options = std::make_unique<Options>();
+			dae::GameStateManager::GetInstance().Add(std::move(options));
+		}
+		break;
+		}
+	}
+}
+
+void MainMenu::KeyboardUpdate()
+{
+	if (m_InputManagerRef.IsPressed(SDL_SCANCODE_RETURN))
+	{
+		switch (m_ActiveButtonId)
+		{
+		case MainMenuButtons::PLAY:
+		{
+			auto scene = std::make_unique<dae::Scene>(1);
+			dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
+			dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+		}
+		break;
+		case MainMenuButtons::OPTIONS:
+		{
+			auto options = std::make_unique<Options>();
+			dae::GameStateManager::GetInstance().Add(std::move(options));
+		}
+		break;
+		}
+	}
+}
 
 MainMenu::MainMenu()
 {
@@ -33,7 +78,7 @@ void MainMenu::Init()
 
 void MainMenu::HandleInput()
 {
-	auto j = dae::InputManager::GetInstance().GetPlayerDirection(0);
+	auto j = dae::InputManager::GetInstance().GetMenuDirection(0);
 
 	if (j == dae::Direction::Up)
 		m_ActiveButtonId = MainMenuButtons(((unsigned int)m_ActiveButtonId - 1)%(int)MainMenuButtons::COUNT);
@@ -43,25 +88,11 @@ void MainMenu::HandleInput()
 
 void MainMenu::Update(const float)
 {
-	if (dae::InputManager::GetInstance().IsPressed(dae::ControllerButton::ButtonA, 0))
-	{
-		switch (m_ActiveButtonId)
-		{
-		case MainMenuButtons::PLAY:
-		{
-			auto scene = std::make_unique<dae::Scene>();
-			dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
-			dae::GameStateManager::GetInstance().Add(std::move(scene),1);
-		}
-		break;
-		case MainMenuButtons::OPTIONS:
-		{
-			auto options = std::make_unique<Options>();
-			dae::GameStateManager::GetInstance().Add(std::move(options));
-		}
-		break;
-		}
-	}
+	auto inDevice = m_InputManagerRef.GetInputDevice(0);
+	if (inDevice == dae::InputDevices::KeyBoard)
+		KeyboardUpdate();
+	else if (inDevice == dae::InputDevices::XBoxController)
+		ControllerUpdate();
 }
 
 void MainMenu::Render() const

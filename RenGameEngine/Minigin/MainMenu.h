@@ -3,6 +3,7 @@
 #include "Texture2D.h"
 #include "Font.h"
 #include <string>
+#include "InputManager.h"
 
 enum class MainMenuButtons
 {
@@ -21,6 +22,11 @@ class MainMenu: public dae::GameState
 	std::shared_ptr<dae::Texture2D> m_pOptionsButtonTexture;
 
 	MainMenuButtons m_ActiveButtonId{MainMenuButtons::PLAY};
+
+	dae::InputManager& m_InputManagerRef{ dae::InputManager::GetInstance() };
+
+	void ControllerUpdate();
+	void KeyboardUpdate();
 
 public:
 	MainMenu();

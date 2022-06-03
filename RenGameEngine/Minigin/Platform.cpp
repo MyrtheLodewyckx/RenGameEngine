@@ -29,24 +29,7 @@ void dae::Platform::HandlePlayerCollision()
 
     for (int i = 0; i < (int)players.size(); ++i)
     {
-        for (int j = 0; j < (int)m_ObjectList.size(); ++j)
-        {
-            if (Collision::IsOverlapping(m_ObjectList[j]->m_HitBox, SDL_Rect(players[i]->GetHitBox().x, players[i]->GetHitBox().y + players[i]->GetHitBox().h, players[i]->GetHitBox().w, 1)))
-            {
-                players[i]->m_IsOnGround = true;
-                return;
-            }
-
-            //make sure the player does not go out of bounds
-            if (Collision::IsOverlapping(SDL_Rect(m_HitBox.x - 5, m_HitBox.y, m_HitBox.w + 10, m_HitBox.h), SDL_Rect(players[i]->GetHitBox().x, players[i]->GetHitBox().y + players[i]->GetHitBox().h, players[i]->GetHitBox().w, 2)))
-            {
-                if (players[i]->GetPos().x < m_HitBox.x)
-                    players[i]->SetPos(glm::vec3(m_HitBox.x + 1, players[i]->GetHitBox().y, 0));
-                else if (players[i]->GetPos().x + players[i]->GetHitBox().w > m_HitBox.x + m_HitBox.w)
-                    players[i]->SetPos(glm::vec3(m_HitBox.x + m_HitBox.w - 1 - players[i]->GetHitBox().w, players[i]->GetHitBox().y, 0));
-            }
-        }
-        players[i]->m_IsOnGround = false;
+        HandleOnePlayerCollision(players[i]);
     }
 }
 
@@ -76,6 +59,28 @@ void dae::Platform::HandleEnemyCollision()
             }
         }
     }
+}
+
+void dae::Platform::HandleOnePlayerCollision(PlayerPhysics* player)
+{
+    for (int j = 0; j < (int)m_ObjectList.size(); ++j)
+    {
+        if (Collision::IsOverlapping(m_ObjectList[j]->m_HitBox, SDL_Rect(player->GetHitBox().x, player->GetHitBox().y + player->GetHitBox().h, player->GetHitBox().w, 1)))
+        {
+            player->m_IsOnGround = true;
+            return;
+        }
+
+        //make sure the player does not go out of bounds
+        if (Collision::IsOverlapping(SDL_Rect(m_HitBox.x - 5, m_HitBox.y, m_HitBox.w + 10, m_HitBox.h), SDL_Rect(player->GetHitBox().x, player->GetHitBox().y + player->GetHitBox().h, player->GetHitBox().w, 2)))
+        {
+            if (player->GetPos().x < m_HitBox.x)
+                player->SetPos(glm::vec3(m_HitBox.x + 1, player->GetHitBox().y, 0));
+            else if (player->GetPos().x + player->GetHitBox().w > m_HitBox.x + m_HitBox.w)
+                player->SetPos(glm::vec3(m_HitBox.x + m_HitBox.w - 1 - player->GetHitBox().w, player->GetHitBox().y, 0));
+        }
+    }
+    player->m_IsOnGround = false;
 }
 
 void dae::Platform::Update(const float)

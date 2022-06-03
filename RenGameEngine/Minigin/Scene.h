@@ -14,7 +14,7 @@ namespace dae
 		virtual void HandleInput() override {};
 		virtual void Init() override {};
 
-		Scene();
+		Scene(int lvl);
 		~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
@@ -23,6 +23,7 @@ namespace dae
 
 	private: 
 		std::vector <std::shared_ptr<GameObject>> m_Objects;
+		int m_Level = 1;
 	};
 
 }

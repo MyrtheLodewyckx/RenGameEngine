@@ -30,25 +30,30 @@ const void dae::Ladder::HandlePlayerCollision()
 
 	for (int i = 0; i < (int)players.size(); ++i)
 	{
-		for (int j = 0; j < (int)m_ObjectList.size(); ++j)
-		{
-			if (Collision::IsInRect(m_ObjectList[j]->m_HitBox, glm::vec3(players[i]->GetHitBox().x + players[i]->GetHitBox().w / 2.f, players[i]->GetHitBox().y + players[i]->GetHitBox().h, 0)))
-			{
-				players[i]->m_IsOnLadder = true;
-				return;
-			}
-
-			//make sure the player does not go out of bounds
-			if (Collision::IsInRect(SDL_Rect(m_HitBox.x, m_HitBox.y - 5, m_HitBox.w, m_HitBox.h + 10), glm::vec3(players[i]->GetHitBox().x + players[i]->GetHitBox().w / 2.f, players[i]->GetHitBox().y + players[i]->GetHitBox().h, 0)))
-			{
-				if (players[i]->GetPos().y + players[i]->GetHitBox().h > m_HitBox.y + m_HitBox.h)
-					players[i]->SetPos(glm::vec3(players[i]->GetPos().x, m_HitBox.y + m_HitBox.h - players[i]->GetHitBox().h - 1, 0));
-				else if (players[i]->GetPos().y + players[i]->GetHitBox().h < m_HitBox.y)
-					players[i]->SetPos(glm::vec3(players[i]->GetPos().x, m_HitBox.y - players[i]->GetHitBox().h + 1, 0));
-			}
-		}
-		players[i]->m_IsOnLadder = false;
+		HandleOnePlayerCollision(players[i]);
 	}
+}
+
+const void dae::Ladder::HandleOnePlayerCollision(PlayerPhysics* player)
+{
+	for (int j = 0; j < (int)m_ObjectList.size(); ++j)
+	{
+		if (Collision::IsInRect(m_ObjectList[j]->m_HitBox, glm::vec3(player->GetHitBox().x + player->GetHitBox().w / 2.f, player->GetHitBox().y + player->GetHitBox().h, 0)))
+		{
+			player->m_IsOnLadder = true;
+			return;
+		}
+
+		//make sure the player does not go out of bounds
+		if (Collision::IsInRect(SDL_Rect(m_HitBox.x, m_HitBox.y - 5, m_HitBox.w, m_HitBox.h + 10), glm::vec3(player->GetHitBox().x + player->GetHitBox().w / 2.f, player->GetHitBox().y + player->GetHitBox().h, 0)))
+		{
+			if (player->GetPos().y + player->GetHitBox().h > m_HitBox.y + m_HitBox.h)
+				player->SetPos(glm::vec3(player->GetPos().x, m_HitBox.y + m_HitBox.h - player->GetHitBox().h - 1, 0));
+			else if (player->GetPos().y + player->GetHitBox().h < m_HitBox.y)
+				player->SetPos(glm::vec3(player->GetPos().x, m_HitBox.y - player->GetHitBox().h + 1, 0));
+		}
+	}
+	player->m_IsOnLadder = false;
 }
 
 const void dae::Ladder::HandleEnemyCollision()

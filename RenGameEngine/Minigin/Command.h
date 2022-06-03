@@ -3,6 +3,8 @@
 #include "Subject.h"
 #include "EventManager.h"
 #include "PlayerPhysics.h"
+#include "GameStateManager.h"
+#include "Scene.h"
 
 using namespace dae;
 
@@ -20,6 +22,7 @@ public:
 	~ThrowPepper() {};
 	virtual void Execute(int playerIdx) override 
 	{ 
+		if(typeid(* GameStateManager::GetInstance().GetCurrent().get()) == typeid(Scene))
 		PlayerPhysics::GetPlayer(playerIdx)->ThrowPepper();
 	};
 };

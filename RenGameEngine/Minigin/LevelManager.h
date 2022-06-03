@@ -15,7 +15,7 @@ namespace dae
 		std::shared_ptr<GameObject> CreatePlate(SDL_Rect hitbox, Scene& scene) const;
 		std::shared_ptr<GameObject> CreateBurgerPart(SDL_Rect hitbox, std::string path, Scene& scene) const;
 		void CreateEnemy(SDL_Rect hitbox, Scene& scene, EnemyID id) const;
-		void CreateHUD(glm::vec3 pos, Scene* scene, int controllerIdx) const;
+		
 	public:
 		void LoadLevel(const std::string& path, Scene& scene);
 		LevelManager() = default;

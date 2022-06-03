@@ -102,6 +102,11 @@ bool dae::InputManager::IsPressed(ControllerButton button, int playerIdx) const
 	return m_pXBox_controllers->IsPressed(button, controllerIdx);
 }
 
+bool dae::InputManager::IsPressed(SDL_Scancode key) const
+{
+	return m_pKeyBoard->IsPressed(key);
+}
+
 void dae::InputManager::HandleInputs()
 {
 	//FIRST == BUTTON
@@ -112,8 +117,9 @@ void dae::InputManager::HandleInputs()
 	for (int i{ 0 }; i < m_InputDevices.size(); ++i)
 	{
 		m_direction[i] = Direction::None;
+		m_MenuDirection[i] = Direction::None;
 
-		//EXECUTE BUTTON COMMANDS
+		//XBOX EXECUTION
 
 		if (m_InputDevices[i] == InputDevices::XBoxController)
 		{
@@ -126,31 +132,52 @@ void dae::InputManager::HandleInputs()
 				}
 			}
 
-			//SET DIRECTION
+			//SET DIRECTIONS
 			int xAxis;
 			int yAxis;
 			m_pXBox_controllers->GetLeftJoystickInput(i, xAxis, yAxis);
 			
 
-
-			if (xAxis > joystickDeadZone || m_pXBox_controllers->IsPressed(ControllerButton::DPAD_RIGHT,i))
+			if (xAxis > joystickDeadZone || m_pXBox_controllers->IsDown(ControllerButton::DPAD_RIGHT,i))
 			{
 				m_direction[i] = Direction::Right;
 			}
-			else if (xAxis < -joystickDeadZone || m_pXBox_controllers->IsPressed(ControllerButton::DPAD_LEFT, i))
+			else if (xAxis < -joystickDeadZone || m_pXBox_controllers->IsDown(ControllerButton::DPAD_LEFT, i))
 			{
 				m_direction[i] = Direction::Left;
 			}
 
-			if (yAxis > xAxis && yAxis > joystickDeadZone || m_pXBox_controllers->IsPressed(ControllerButton::DPAD_UP, i))
+			if (yAxis > xAxis && yAxis > joystickDeadZone || m_pXBox_controllers->IsDown(ControllerButton::DPAD_UP, i))
 			{
 				m_direction[i] = Direction::Up;
 			}
-			else if (yAxis < xAxis && yAxis < -joystickDeadZone || m_pXBox_controllers->IsPressed(ControllerButton::DPAD_DOWN, i))
+			else if (yAxis < xAxis && yAxis < -joystickDeadZone || m_pXBox_controllers->IsDown(ControllerButton::DPAD_DOWN, i))
 			{
 				m_direction[i] = Direction::Down;
 			}
+
+			//MENU DIRECTION
+
+			if (m_pXBox_controllers->IsPressed(ControllerButton::DPAD_RIGHT, i))
+			{
+				m_MenuDirection[i] = Direction::Right;
+			}
+			else if (m_pXBox_controllers->IsDown(ControllerButton::DPAD_LEFT, i))
+			{
+				m_MenuDirection[i] = Direction::Left;
+			}
+			else if (m_pXBox_controllers->IsDown(ControllerButton::DPAD_UP, i))
+			{
+				m_MenuDirection[i] = Direction::Up;
+			}
+			else if (m_pXBox_controllers->IsDown(ControllerButton::DPAD_DOWN, i))
+			{
+				m_MenuDirection[i] = Direction::Down;
+			}
+
 		}
+
+		//KEYBOARD EXECUTION PLAYER 1
 		else if (m_InputDevices[i] == InputDevices::KeyBoard)
 		{
 			int keyboardIndex = GetDeviceIdx(i, InputDevices::KeyBoard);
@@ -166,14 +193,23 @@ void dae::InputManager::HandleInputs()
 				}
 				for (auto itr = m_Keyboard1DirectionMap.begin(); itr != m_Keyboard1DirectionMap.end(); itr++)
 				{
-					if (m_pKeyBoard->IsPressed(itr->first))
+					if (m_pKeyBoard->IsDown(itr->first))
 					{
 					m_direction[i] = itr->second;
 						break;
 					}
 				}
+				for (auto itr = m_Keyboard1DirectionMap.begin(); itr != m_Keyboard1DirectionMap.end(); itr++)
+				{
+					if (m_pKeyBoard->IsPressed(itr->first))
+					{
+						m_MenuDirection[i] = itr->second;
+						break;
+					}
+				}
 
 			}
+		//KEYBOARD EXECUTION PLAYER 2
 			else
 			{
 				for (auto itr = m_Keyboard2CommandMap.begin(); itr != m_Keyboard2CommandMap.end(); itr++)
@@ -186,9 +222,17 @@ void dae::InputManager::HandleInputs()
 				}
 				for (auto itr = m_Keyboard2DirectionMap.begin(); itr != m_Keyboard2DirectionMap.end(); itr++)
 				{
-					if (m_pKeyBoard->IsPressed(itr->first))
+					if (m_pKeyBoard->IsDown(itr->first))
 					{
 						m_direction[i] = itr->second;
+						break;
+					}
+				}
+				for (auto itr = m_Keyboard2DirectionMap.begin(); itr != m_Keyboard2DirectionMap.end(); itr++)
+				{
+					if (m_pKeyBoard->IsPressed(itr->first))
+					{
+						m_MenuDirection[i] = itr->second;
 						break;
 					}
 				}

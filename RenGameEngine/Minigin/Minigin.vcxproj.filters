@@ -117,7 +117,7 @@
     <ClInclude Include="Command.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="HUDinfo.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="PlayerPhysics.h">
@@ -245,7 +245,7 @@
     <ClCompile Include="PlayerPhysics.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="HUDinfo.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Ladder.cpp">

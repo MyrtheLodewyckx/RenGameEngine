@@ -20,16 +20,36 @@ dae::BurgerPart::BurgerPart(GameObject* go)
 	m_ObjectList.emplace_back(this);
 }
 
+
 dae::BurgerPart::~BurgerPart()
 {
 	auto newEnd = std::remove(m_ObjectList.begin(), m_ObjectList.end(), this);
 	m_ObjectList.erase(newEnd, m_ObjectList.end());
 }
 
+void dae::BurgerPart::CheckWinCondition()
+{
+	if (m_ObjectList.empty())
+		return;
+	for (auto part : m_ObjectList)
+	{
+		if (!part->m_IsOnPlate)
+			return;
+	}
+
+	Event* e = new Event();
+	e->ID = Events::NEXT_LEVEL;
+	dae::EventManager::GetInstance().AddEvent(e);
+
+	m_ObjectList.clear();
+}
+
 void dae::BurgerPart::Update(const float deltaTime)
 {
 	//MAKE SURE EVERYTHING IS INITIALIZED
 	auto players = PlayerPhysics::GetAllInstances();
+
+	CheckWinCondition();
 
 	if (!m_TransformPtr)
 		m_TransformPtr = m_Go->GetComponent<Transform>();

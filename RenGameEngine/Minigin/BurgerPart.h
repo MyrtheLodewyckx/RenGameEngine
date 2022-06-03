@@ -17,6 +17,7 @@ namespace dae
 		TextureComponent* m_texturePtr = nullptr;
 		bool m_IsFalling = false;
 		bool m_IsOnPlate = false;
+		void CheckWinCondition();
 
 	public:
 		BurgerPart(GameObject* go);

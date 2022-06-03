@@ -7,6 +7,7 @@ namespace dae
 {
 	class GameObject;
 	class TextureComponent;
+	class PlayerPhysics;
 	class Platform : public Component
 	{
 		static std::vector<Platform*> m_ObjectList;
@@ -14,6 +15,7 @@ namespace dae
 		TextureComponent* m_texturePtr = nullptr;
 		void HandlePlayerCollision();
 		void HandleEnemyCollision();
+		void HandleOnePlayerCollision(PlayerPhysics*);
 
 	public:
 		static std::vector<Platform*> GetAllInstances() { return m_ObjectList; }

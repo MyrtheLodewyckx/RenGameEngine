@@ -8,8 +8,8 @@ namespace dae
 {
 	enum class InputDevices
 	{
-		XBoxController,
-		KeyBoard
+		KeyBoard,
+		XBoxController
 	};
 
 	enum class Direction
@@ -32,6 +32,7 @@ namespace dae
 
 		static const int maxPlayers = 2;
 		Direction m_direction[maxPlayers] = {};
+		Direction m_MenuDirection[maxPlayers] = {};
 
 		ThrowPepper* m_PepperCommand = new ThrowPepper{};
 		Select* m_SelectCommand = new Select{};
@@ -80,6 +81,7 @@ namespace dae
 		void RemovePlayer();
 		void ChangePlayerInputDevice(int index, InputDevices newInputDevice);
 		InputDevices GetInputDevice(int playerIdx);
+		int GetAmtOfPlayers() { return (int)m_InputDevices.size(); }
 
 		void SetDirection(int playerIdx, Direction direction) { m_direction[playerIdx] = direction; };
 
@@ -87,9 +89,11 @@ namespace dae
 		
 		void SwitchCommand(ControllerButton newButton, Command* command);
 		Direction GetPlayerDirection(int playerIdx) { return m_direction[playerIdx]; }
+		Direction GetMenuDirection(int playerIdx) { return m_MenuDirection[playerIdx]; }
 
 		bool ProcessInput();
 		bool IsPressed(ControllerButton button, int PlayerIdx) const;
+		bool IsPressed(SDL_Scancode key) const;
 	/*	bool IsDown(ControllerButton button, int controllerIdx) const {}
 		bool IsUp(ControllerButton button, int controllerIdx) const {}*/
 

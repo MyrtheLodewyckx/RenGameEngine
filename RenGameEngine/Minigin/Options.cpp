@@ -4,6 +4,42 @@
 
 
 
+void Options::ControllerUpdate()
+{
+	if (m_InputManagerRef.IsPressed(dae::ControllerButton::ButtonB, 0))
+		dae::GameStateManager::GetInstance().PopCurrent();
+	else if (m_InputManagerRef.IsPressed(dae::ControllerButton::ButtonA, 0))
+	{
+		switch (m_lvls)
+		{
+		case 1:
+			m_InputManagerRef.ChangePlayerInputDevice(0, dae::InputDevices(m_Player1SelectedInputDevice));
+			break;
+		case 2:
+			m_InputManagerRef.ChangePlayerInputDevice(1, dae::InputDevices(m_Player2SelectedInputDevice));
+			break;
+		}
+	}
+}
+
+void Options::KeyboardUpdate()
+{
+	if (m_InputManagerRef.IsPressed(SDL_SCANCODE_BACKSPACE))
+		dae::GameStateManager::GetInstance().PopCurrent();
+	else if (m_InputManagerRef.IsPressed(SDL_SCANCODE_RETURN))
+	{
+		switch (m_lvls)
+		{
+		case 1:
+			m_InputManagerRef.ChangePlayerInputDevice(0, dae::InputDevices(m_Player1SelectedInputDevice));
+			break;
+		case 2:
+			m_InputManagerRef.ChangePlayerInputDevice(1, dae::InputDevices(m_Player2SelectedInputDevice));
+			break;
+		}
+	}
+}
+
 Options::Options()
 {
 }
@@ -23,8 +59,8 @@ void Options::Init()
 
 
 	m_pArrowButtonTexture = resourceRf.LoadTexture("Arrow.png");
-	m_InputDevicesTexture.emplace_back(resourceRf.LoadTexture("Controller.png"));
 	m_InputDevicesTexture.emplace_back(resourceRf.LoadTexture("Keyboard.png"));
+	m_InputDevicesTexture.emplace_back(resourceRf.LoadTexture("Controller.png"));
 	m_pPeterHeadIcon = resourceRf.LoadTexture("PeterHead.png");
 
 
@@ -36,27 +72,34 @@ void Options::Init()
 
 void Options::HandleInput()
 {
-	auto j = m_InputManagerRef.GetPlayerDirection(0);
+	auto j = m_InputManagerRef.GetMenuDirection(0);
 
 	int maxLvls = 3;
 	if (m_GameModeRef == dae::GameMode::SinglePlayer)
 		maxLvls = 2;
 
 	//SCROLL TROUGH LEVELS
-	if (j == dae::Direction::Up || m_InputManagerRef.IsPressed(dae::ControllerButton::DPAD_UP, 0))
+	if (j == dae::Direction::Up)
 	{
 		m_lvls = unsigned int(m_lvls - 1) % maxLvls;
 	}
-	else if (j == dae::Direction::Down || m_InputManagerRef.IsPressed(dae::ControllerButton::DPAD_DOWN, 0))
+	else if (j == dae::Direction::Down)
 		m_lvls = unsigned int(m_lvls + 1) % maxLvls;
 
 	//SCROLL THROUGH OPTIONS
-	else if(j == dae::Direction::Left || m_InputManagerRef.IsPressed(dae::ControllerButton::DPAD_LEFT, 0))
+	else if(j == dae::Direction::Left)
 	{
 		switch (m_lvls)
 		{
 		case 0:
+		{
+			dae::GameMode lastGameMode = m_GameModeRef;
 			m_GameModeRef = dae::GameMode(((unsigned int)m_GameModeRef - 1) % m_GameModeTexture.size());
+			if (m_GameModeRef == dae::GameMode::SinglePlayer)
+				m_InputManagerRef.RemovePlayer();
+			else if ((m_GameModeRef == dae::GameMode::CoUp || m_GameModeRef == dae::GameMode::Versus) && lastGameMode == dae::GameMode::SinglePlayer)
+				m_InputManagerRef.AddPlayer(dae::InputDevices(m_Player2SelectedInputDevice));
+		}
 			break;
 		case 1:
 			m_Player1SelectedInputDevice = unsigned int(m_Player1SelectedInputDevice - 1) % m_InputDevicesTexture.size();
@@ -66,12 +109,19 @@ void Options::HandleInput()
 			break;
 		}
 	}
-	else if(j == dae::Direction::Right || m_InputManagerRef.IsPressed(dae::ControllerButton::DPAD_RIGHT, 0))
+	else if(j == dae::Direction::Right)
 	{
 		switch (m_lvls)
 		{
 		case 0:
+		{
+			dae::GameMode lastGameMode = m_GameModeRef;
 			m_GameModeRef = dae::GameMode(((unsigned int)m_GameModeRef + 1) % m_GameModeTexture.size());
+			if (m_GameModeRef == dae::GameMode::SinglePlayer)
+				m_InputManagerRef.RemovePlayer();
+			else if ((m_GameModeRef == dae::GameMode::CoUp || m_GameModeRef == dae::GameMode::Versus) && lastGameMode == dae::GameMode::SinglePlayer)
+				m_InputManagerRef.AddPlayer(dae::InputDevices(m_Player2SelectedInputDevice));
+		}
 			break;
 		case 1:
 			m_Player1SelectedInputDevice = unsigned int(m_Player1SelectedInputDevice + 1) % m_InputDevicesTexture.size();
@@ -81,13 +131,17 @@ void Options::HandleInput()
 			break;
 		}
 	}
+	auto inDevice = m_InputManagerRef.GetInputDevice(0);
 
+	if (inDevice == dae::InputDevices::KeyBoard)
+		KeyboardUpdate();
+	else if (inDevice == dae::InputDevices::XBoxController)
+		ControllerUpdate();
 }
 
 void Options::Update(const float)
 {
-	if (m_InputManagerRef.IsPressed(dae::ControllerButton::ButtonB, 0))
-		dae::GameStateManager::GetInstance().PopCurrent();
+	
 }
 
 void Options::Render() const
