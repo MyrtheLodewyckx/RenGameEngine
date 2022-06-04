@@ -30,7 +30,6 @@ namespace dae
 		bool m_remove = false;
 
 		GameMode m_GameMode = GameMode::SinglePlayer;
-		std::vector<HUDinfo&> m_HUDs{};
 
 		std::shared_ptr<GameObject> CreateHUD(glm::vec3 pos, int controllerIdx) const;
 

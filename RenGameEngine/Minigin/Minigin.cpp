@@ -8,7 +8,6 @@
 #include "Scene.h"
 #include "TextureComponent.h"
 #include "TextComponent.h"
-#include "Player.h"
 #include "EventManager.h"
 #include "SpriteComponent.h"
 #include "FPScounter.h"
@@ -175,70 +174,3 @@ void dae::Minigin::Run()
 	Cleanup();
 }
 
-void dae::Minigin::CreateHUD(glm::vec3 pos, Scene* scene, int controllerIdx) const
-{
-	auto HUD = std::make_shared<GameObject>();
-	auto player = HUD->AddComponent<Player>();
-	auto font = ResourceManager::GetInstance().LoadFont("pixel.otf", 20);
-
-
-	player->SetControllerIdx(controllerIdx);
-
-		//TEXT COMPONENT
-	auto HUDTextCom = HUD->AddComponent<TextComponent>();
-	std::string sHUDtext = "LIVES: " + std::to_string(player->GetLives());
-
-	HUDTextCom->SetFont(font);
-	HUDTextCom->SetText(sHUDtext);
-
-		//TRANSFORM COMPONENT
-	auto sHUDTransformCom = HUD->AddComponent<Transform>();
-	sHUDTransformCom->SetPosition(pos);
-
-		//TEXTURE COMPONENT
-	HUD->AddComponent<TextureComponent>();
-
-	scene->Add(HUD);
-
-	//CHILD COMPONENT SCORE TEXT
-	auto scoreHUD = std::make_shared<GameObject>();
-	scoreHUD->SetParent(HUD.get());
-
-		//TEXT COMPONENT
-	auto scoreHUDTextCom = scoreHUD->AddComponent<TextComponent>();
-	std::string scoreHUDtext = "SCORE: " + std::to_string(player->GetScore());
-
-	scoreHUDTextCom->SetFont(font);
-	scoreHUDTextCom->SetText(scoreHUDtext);
-
-		//TRANSFORM COMPONENT
-	auto scoreHUDTransformCom = scoreHUD->AddComponent<Transform>();
-	scoreHUDTransformCom->SetPosition(pos.x+300,pos.y,pos.z);
-
-		//TEXTURE COMPONENT
-	scoreHUD->AddComponent<TextureComponent>();
-
-	scene->Add(scoreHUD);
-}
-
-void dae::Minigin::CreatePlayer(glm::vec3 pos, Scene* scene, int controllerIdx) const
-{
-	const int playerSize = 30;
-	auto player = std::make_shared<GameObject>();
-	auto spriteCom = player->AddComponent<SpriteComponent>();
-
-	std::string texturePath = "sprites/Player" + std::to_string(controllerIdx + 1) + "WalkingForward.png";
-
-	auto spriteTexture = ResourceManager::GetInstance().LoadTexture(texturePath);
-	Sprite sprite{ spriteTexture, 1, 3, 0.5f };
-	spriteCom->SetSprite(sprite, playerSize, 0);
-
-	auto transformCom = player->AddComponent<Transform>();
-	transformCom->SetPosition(pos);
-
-	auto physics = player->AddComponent<PlayerPhysics>();
-	physics->SetControllerIdx(controllerIdx);
-	physics->SetDimentions(playerSize, playerSize);
-
-	scene->Add(player);
-}

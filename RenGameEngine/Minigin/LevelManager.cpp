@@ -12,7 +12,7 @@
 #include <fstream>
 #include <regex>
 #include "Plate.h"
-#include "Player.h"
+#include "HUDinfo.h"
 #include "TextComponent.h"
 #include "GameStateManager.h"
 
@@ -99,6 +99,53 @@ std::shared_ptr<dae::GameObject> dae::LevelManager::CreatePlate(SDL_Rect hitbox,
 	return plate;
 }
 
+void dae::LevelManager::CreateHUD(glm::vec3 pos, int controllerIdx, Scene& scene)
+{
+	auto Hud = std::make_shared<GameObject>();
+	auto info = Hud->AddComponent<HUD>();
+	auto font = ResourceManager::GetInstance().LoadFont("pixel.otf", 20);
+
+
+	info->SetPlayerIdx(controllerIdx);
+	info->SetGlobalVariables(m_Lives[controllerIdx]);
+
+	//TEXT COMPONENT
+	auto HUDTextCom = Hud->AddComponent<TextComponent>();
+	std::string sHUDtext = "LIVES: " + std::to_string(info->GetLives());
+
+	HUDTextCom->SetFont(font);
+	HUDTextCom->SetText(sHUDtext);
+
+	//TRANSFORM COMPONENT
+	auto sHUDTransformCom = Hud->AddComponent<Transform>();
+	sHUDTransformCom->SetPosition(pos.x, pos.y + 50 * controllerIdx, pos.z);
+
+	//TEXTURE COMPONENT
+	Hud->AddComponent<TextureComponent>();
+
+	scene.Add(Hud);
+
+	//CHILD COMPONENT SCORE TEXT
+	auto scoreHUD = std::make_shared<GameObject>();
+	scoreHUD->SetParent(Hud.get());
+
+	//TEXT COMPONENT
+	auto scoreHUDTextCom = scoreHUD->AddComponent<TextComponent>();
+	std::string scoreHUDtext = "SCORE: " + std::to_string(info->GetScore());
+
+	scoreHUDTextCom->SetFont(font);
+	scoreHUDTextCom->SetText(scoreHUDtext);
+
+	//TRANSFORM COMPONENT
+	auto scoreHUDTransformCom = scoreHUD->AddComponent<Transform>();
+	scoreHUDTransformCom->SetPosition(pos.x + 300, pos.y + 50*controllerIdx, pos.z);
+
+	//TEXTURE COMPONENT
+	scoreHUD->AddComponent<TextureComponent>();
+
+	scene.Add(scoreHUD);
+}
+
 std::shared_ptr<dae::GameObject> dae::LevelManager::CreateBurgerPart(SDL_Rect hitbox, std::string path, Scene& scene) const
 {
 	auto burger = std::make_shared<GameObject>();
@@ -134,13 +181,20 @@ void dae::LevelManager::CreateEnemy(SDL_Rect hitbox, Scene& scene, EnemyID id) c
 	scene.Add(enemy);
 }
 
+
 void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 {
 	std::regex info{ ".+\\(([0-9]+),([0-9]+)\\)\\(([0-9]+),([0-9]+)\\)" };
 
-
 	std::string line; 
 	std::smatch match;
+
+	auto mode = dae::GameStateManager::GetInstance().GetGameMode();
+	if ((mode == dae::GameMode::CoUp || mode == dae::GameMode::Versus) && m_Lives.size() == 1)
+		m_Lives.emplace_back(3);
+	else if (mode == dae::GameMode::SinglePlayer && m_Lives.size() == 2)
+		m_Lives.pop_back();
+
 	
 	std::ifstream levelFile(path);
 	if (levelFile.is_open())
@@ -188,7 +242,6 @@ void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 //CREATE PLAYERS ACCORDING TO GAMEMODE
 				case 'S':
 				{
-					auto mode = dae::GameStateManager::GetInstance().GetGameMode();
 					switch (line[1])
 					{
 					case '1':
@@ -214,4 +267,12 @@ void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 		}
 		levelFile.close();
 	}
+
+	for (int i = 0; i < (int)m_Lives.size(); ++i)
+		CreateHUD(glm::vec3(20, 20, 0), i, scene);
+
+}
+
+dae::LevelManager::LevelManager()
+{
 }

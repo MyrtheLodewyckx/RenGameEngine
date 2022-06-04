@@ -8,20 +8,20 @@
 
 void dae::HUD::IncrementLives()
 {
-	++lives;
+	*m_Lives += 1;
 }
 
 void dae::HUD::DecrementLives()
 {
-	--lives;
+	*m_Lives -= 1;
 
-	std::string newstr = "LIVES: " + std::to_string(lives);
+	std::string newstr = "LIVES: " + std::to_string(*m_Lives);
 	m_Go->GetComponent<TextComponent>()->SetText(newstr);
 
 	sound_system* a = &AudioServiceLocator::get_sound_system();
 	a->Play((int)SoundId::PLAYER_DIES, 50);
 
-	if (lives == 0)
+	if (m_Lives == 0)
 	{
 		Event* e = new Event{};
 		e->ID = Events::GAME_OVER;
@@ -37,13 +37,18 @@ void dae::HUD::DecrementLives()
 
 void dae::HUD::ChangeScore(int amt)
 {
-	score += amt;
-	std::string newstr = "SCORE: " + std::to_string(score);
+	m_Score += amt;
+	std::string newstr = "SCORE: " + std::to_string(m_Score);
 	auto g = m_Go->GetChildAt(0)->GetComponent<TextComponent>();
 	g->SetText(newstr);
 
 	sound_system* a = &AudioServiceLocator::get_sound_system();
 	a->Play((int)SoundId::SCORE_UP, 50);
+}
+
+void dae::HUD::SetGlobalVariables(int& lives)
+{
+	m_Lives = &lives;
 }
 
 void dae::HUD::Update(const float)
@@ -63,7 +68,7 @@ void dae::HUD::HandleEvents()
 	case Events::PLAYER_DIES:
 	{
 		auto p = dynamic_cast<PlayerDiesEvent*>(e);
-		if (p->controllerIdx == m_ControllerIdx)
+		if (p->controllerIdx == m_PlayerIdx)
 			DecrementLives();
 		break;
 	}
@@ -73,7 +78,7 @@ void dae::HUD::HandleEvents()
 	case Events::SCORE_CHANGE:
 	{
 		auto p = dynamic_cast<ScoreChangeEvent*>(e);
-		if (p->controllerIdx == m_ControllerIdx)
+		if (p->controllerIdx == m_PlayerIdx)
 		ChangeScore(p->amt);
 		break;
 	}

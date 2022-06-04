@@ -4,6 +4,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Enemy.h"
+#include <vector>
 
 namespace dae
 {
@@ -15,9 +16,13 @@ namespace dae
 		std::shared_ptr<GameObject> CreatePlate(SDL_Rect hitbox, Scene& scene) const;
 		std::shared_ptr<GameObject> CreateBurgerPart(SDL_Rect hitbox, std::string path, Scene& scene) const;
 		void CreateEnemy(SDL_Rect hitbox, Scene& scene, EnemyID id) const;
-		
+		void CreateHUD(glm::vec3 pos, int controllerIdx, Scene& scene);
+	
+
 	public:
+		std::vector<int> m_Lives{3};
 		void LoadLevel(const std::string& path, Scene& scene);
-		LevelManager() = default;
+		LevelManager();
+		~LevelManager()=default;
 	};
 }

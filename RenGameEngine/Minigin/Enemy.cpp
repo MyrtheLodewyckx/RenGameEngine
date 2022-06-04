@@ -41,6 +41,8 @@ void dae::Enemy::HandleMovement(const float deltaTime)
 
 void dae::Enemy::HandlePlayerCollision()
 {
+	if (m_ObjectList.empty())
+		return;
 	auto players = PlayerPhysics::GetAllInstances();
 
 	for (auto player : players)
@@ -50,6 +52,8 @@ void dae::Enemy::HandlePlayerCollision()
 			PlayerDiesEvent* e = new PlayerDiesEvent{};
 			e->controllerIdx = player->GetControllerIdx();
 			dae::EventManager::GetInstance().AddEvent(e);
+			m_ObjectList.clear();
+			return;
 		}
 	}
 }
