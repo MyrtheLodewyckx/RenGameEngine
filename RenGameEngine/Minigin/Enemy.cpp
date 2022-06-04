@@ -44,19 +44,41 @@ void Enemy::HandleStun(const float deltaTime)
 	}
 }
 
+void Enemy::HandleDeath(const float deltaTime)
+{
+	float deathTime{ 10.f };
+	m_Timer += deltaTime;
+
+	if (m_Timer >= deathTime)
+	{
+		m_IsDead = false;
+		m_ObjectList.push_back(this);
+		m_Timer = 0.f;
+		m_pPhysics->SetPos(m_SpawnPoint);
+		m_pSprite->m_IsRendering = true;
+	}
+}
+
 void Enemy::Update(const float deltaTime)
 {
 	if (!m_pPhysics)
+	{
 		m_pPhysics = m_Go->GetComponent<Physics>();
+		m_SpawnPoint = m_pPhysics->GetPos();
+	}
 	if (!m_pSprite)
 		m_pSprite = m_Go->GetComponent<dae::SpriteComponent>();
 
-	if (!m_IsStunned)
+	if (m_IsStunned)
+		HandleStun(deltaTime);
+	else if (m_IsDead)
+		HandleDeath(deltaTime);
+	else if(!m_IsFalling)
 	{
 		m_pPhysics->HandleMovement(deltaTime);
-		HandlePlayerCollision();
+		//HandlePlayerCollision();
 	}
-	else HandleStun(deltaTime);
+
 
 	auto direction = m_pPhysics->GetDirection();
 	auto hitbox = m_pPhysics->GetHitBox();
@@ -103,6 +125,23 @@ void Enemy::SetEnemyID(EnemyID id)
 		m_Sprites[3] = dae::Sprite(resourceManager.LoadTexture("sprites/PickleStunned.png"), 1, 2, 0.25f);
 		break;
 	}
+
+	m_ID = id;
+}
+
+void Enemy::Die()
+{
+	auto newEnd = std::remove(m_ObjectList.begin(), m_ObjectList.end(), this);
+	m_ObjectList.erase(newEnd, m_ObjectList.end());
+	m_IsDead = true;
+	m_IsStunned = false;
+	m_IsFalling = false;
+	m_pSprite->m_IsRendering = false;
+	m_Timer = 0;
+
+	ScoreChangeEvent* e = new ScoreChangeEvent();
+	e->amt = 100 + int(m_ID) * 100;
+	dae::EventManager::GetInstance().AddEvent(e);
 }
 
 Enemy::~Enemy()

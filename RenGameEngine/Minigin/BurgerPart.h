@@ -18,7 +18,8 @@ namespace dae
 		bool m_IsFalling = false;
 		bool m_IsOnPlate = false;
 		void CheckWinCondition();
-
+		void CheckIsEnemyOn();
+		std::vector<int> m_EnemiesFallingWith{};
 	public:
 		BurgerPart(GameObject* go);
 		~BurgerPart();

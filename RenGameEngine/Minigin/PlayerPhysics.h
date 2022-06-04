@@ -28,7 +28,7 @@ namespace dae
 
 		SDL_Rect GetHitBox();
 		glm::vec3 GetPos();
-		void SetPos(glm::vec3 pos);
+		virtual void SetPos(glm::vec3 pos) override;
 
 		virtual void HandleMovement(const float deltaTime) override;
 

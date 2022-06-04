@@ -24,7 +24,7 @@
 
 	public:
 		SDL_Rect GetHitBox();
-		void SetPos(glm::vec3 pos);
+		virtual void SetPos(glm::vec3 pos) override;
 		virtual glm::vec3 GetPos()override { if (!m_pTransform) return glm::vec3(0, 0, 0); else return m_pTransform->GetPosition(); }
 		static std::vector<AIPhysics*> GetAllInstances();
 		virtual MovementDirection GetDirection() override { return m_Direction; }

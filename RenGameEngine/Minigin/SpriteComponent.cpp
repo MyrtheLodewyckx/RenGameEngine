@@ -26,7 +26,7 @@ void dae::SpriteComponent::Update(const float deltaTime)
 
 void dae::SpriteComponent::Render() const
 {
-	if (m_Sprite.texturePtr)
+	if (m_Sprite.texturePtr && m_IsRendering)
 	{
 		const auto pos = m_Go->GetComponent<Transform>()->GetPosition();
 
@@ -38,7 +38,6 @@ void dae::SpriteComponent::Render() const
 
 		Renderer::GetInstance().RenderTexture(*m_Sprite.texturePtr.get(), pos.x, pos.y, m_DestWidth, m_DestHeight, sourceX, sourceY, SourceWidth, SourceHeight, m_Flip);
 	}
-	else std::cout << "no texture\n";
 }
 
 void dae::SpriteComponent::SetSprite(Sprite sprite, float width, float height)

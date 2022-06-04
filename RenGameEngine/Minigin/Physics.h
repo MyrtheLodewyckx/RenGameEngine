@@ -35,6 +35,7 @@ public:
 	virtual void Render()const override = 0;
 	virtual SDL_Rect GetHitBox() = 0;
 	virtual glm::vec3 GetPos() = 0;
+	virtual void SetPos(glm::vec3 pos) = 0;
 	virtual MovementDirection GetDirection() = 0;
 	virtual void HandleMovement(const float deltaTime) = 0;
 };

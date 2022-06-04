@@ -11,6 +11,7 @@
 #include "Plate.h"
 #include "Collision.h"
 #include "Player.h"
+#include "Enemy.h"
 
 std::vector<dae::BurgerPart*> dae::BurgerPart::m_ObjectList;
 
@@ -42,6 +43,25 @@ void dae::BurgerPart::CheckWinCondition()
 	dae::EventManager::GetInstance().AddEvent(e);
 
 	m_ObjectList.clear();
+}
+
+void dae::BurgerPart::CheckIsEnemyOn()
+{
+	auto enemies = Enemy::GetAllInstances();
+	for (int i = 0; i < enemies.size(); ++i)
+	{
+		/*if (Collision::IsInRect(SDL_Rect((int)m_TransformPtr->GetPosition().x, (int)m_TransformPtr->GetPosition().y - 10, m_Height/2, m_Width),
+			glm::vec2(enemies[i]->GetHitBox().x+enemies[i]->GetHitBox().w/2, enemies[i]->GetHitBox().y + enemies[i]->GetHitBox().h)))
+		{
+			enemies[i]->SetIsFalling(true);
+			m_EnemiesFallingWith.emplace_back(i);
+		}*/
+		if (Collision::IsOverlapping(SDL_Rect((int)m_TransformPtr->GetPosition().x, (int)m_TransformPtr->GetPosition().y - 10, m_Height / 2, m_Width),enemies[i]->GetHitBox()))
+		{
+			enemies[i]->SetIsFalling(true);
+			m_EnemiesFallingWith.emplace_back(i);
+		}
+	}
 }
 
 void dae::BurgerPart::Update(const float deltaTime)
@@ -78,22 +98,31 @@ void dae::BurgerPart::Update(const float deltaTime)
 		{
 			if (m_EnterPoints[i] > m_TransformPtr->GetPosition().x + m_Width / 2 && players[i]->GetPos().x < m_TransformPtr->GetPosition().x)
 			{
-				
+				CheckIsEnemyOn();
 				m_IsFalling = true;
 				m_EnterPoints[i] = 0;
+
 				ScoreChangeEvent* e = new ScoreChangeEvent{};
+				if(m_EnemiesFallingWith.empty())
 				e->amt = 50;
+				else
+				e->amt = 500 + 2* int(m_EnemiesFallingWith.size() - 1)*500;
+
 				e->controllerIdx = players[i]->GetPlayerIdx();
 				dae::EventManager::GetInstance().AddEvent(e);
 
 			}
 			else if (m_EnterPoints[i] < m_TransformPtr->GetPosition().x + m_Width / 2 && players[i]->GetPos().x > m_TransformPtr->GetPosition().x + m_Width)
 			{
-
+				CheckIsEnemyOn();
 				m_IsFalling = true;
 				m_EnterPoints[i] = 0;
+
 				ScoreChangeEvent* e = new ScoreChangeEvent{};
-				e->amt = 50;
+				if (m_EnemiesFallingWith.empty())
+					e->amt = 50;
+				else
+					e->amt = 500 + 2 * int(m_EnemiesFallingWith.size() - 1) * 500;
 				e->controllerIdx = players[i]->GetPlayerIdx();
 				dae::EventManager::GetInstance().AddEvent(e);
 
@@ -122,8 +151,12 @@ void dae::BurgerPart::SetDimentions(int width, int height)
 void dae::BurgerPart::Fall(const float deltaTime)
 {
 	m_TransformPtr->SetPosition(m_TransformPtr->GetPosition().x, m_TransformPtr->GetPosition().y + 50 * deltaTime,0);
-
+	auto enemies = Enemy::GetAllInstances();
 	
+	for (int i = 0; i < (int)m_EnemiesFallingWith.size(); ++i)
+	{
+		enemies[m_EnemiesFallingWith[i]]->SetPos(glm::vec3(enemies[m_EnemiesFallingWith[i]]->GetPos().x, m_TransformPtr->GetPosition().y - enemies[m_EnemiesFallingWith[i]]->GetHitBox().h, 0));
+	}
 
 	for (int i = 0; i < m_ObjectList.size(); ++i)
 	{
@@ -148,10 +181,18 @@ void dae::BurgerPart::Fall(const float deltaTime)
 			SDL_Rect(platforms[i]->GetDimentions().x, platforms[i]->GetDimentions().y + platforms[i]->GetDimentions().h, platforms[i]->GetDimentions().w, 1)))
 		{
 			m_TransformPtr->SetPosition(m_TransformPtr->GetPosition().x, (float)platforms[i]->GetDimentions().y, 0);
+
+			if (m_EnemiesFallingWith.empty())
 			m_IsFalling = false;
+			else
+			{
+				enemies[m_EnemiesFallingWith.size() - 1]->Die();
+				m_EnemiesFallingWith.pop_back();
+			}
 		}
 	}
 
+	//Check if colliding with plate
 	auto plates = Plate::GetAllInstances();
 	for (int i = 0; i < plates.size(); ++i)
 	{
@@ -160,6 +201,17 @@ void dae::BurgerPart::Fall(const float deltaTime)
 		{
 			m_TransformPtr->SetPosition(m_TransformPtr->GetPosition().x, (float)plates[i]->GetDimentions().y - m_Height, 0);
 			m_IsOnPlate = true;
+		}
+	}
+
+	//Check if colliding with enemy
+	for (int i = 0; i < enemies.size(); ++i)
+	{
+		if (Collision::IsOverlapping(SDL_Rect((int)m_TransformPtr->GetPosition().x, (int)m_TransformPtr->GetPosition().y, m_Height, m_Width),
+			enemies[i]->GetHitBox()))
+		{
+			if(!enemies[i]->GetIsFalling())
+			enemies[i]->Die();
 		}
 	}
 }

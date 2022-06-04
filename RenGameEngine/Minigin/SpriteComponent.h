@@ -24,7 +24,10 @@ namespace dae
 		float m_DestHeight = 0;
 		SDL_RendererFlip m_Flip = (SDL_RendererFlip)0;
 
+		
+
 	public:
+		bool m_IsRendering = true;
 		SpriteComponent(GameObject* go) : Component(go) {}
 		~SpriteComponent() = default;
 
