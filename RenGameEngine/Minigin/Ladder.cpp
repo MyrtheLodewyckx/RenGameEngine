@@ -7,8 +7,8 @@
 #include "utils.cpp"
 #include "ResourceManager.h"
 #include "TextureComponent.h"
-#include "Enemy.h"
 #include "Collision.h"
+#include "AIPhysics.h"
 
 std::vector<dae::Ladder*> dae::Ladder::m_ObjectList;
 
@@ -58,7 +58,7 @@ const void dae::Ladder::HandleOnePlayerCollision(PlayerPhysics* player)
 
 const void dae::Ladder::HandleEnemyCollision()
 {
-	auto enemies = Enemy::GetAllInstances();
+	auto enemies = AIPhysics::GetAllInstances();
 
 	for (int i = 0; i < (int)enemies.size(); ++i)
 	{
@@ -77,9 +77,9 @@ const void dae::Ladder::HandleEnemyCollision()
 			if (Collision::IsInRect(SDL_Rect(m_HitBox.x, m_HitBox.y - 5, m_HitBox.w, m_HitBox.h + 10), glm::vec2(enemies[i]->GetHitBox().x + enemies[i]->GetHitBox().w / 2.f, enemies[i]->GetHitBox().y + enemies[i]->GetHitBox().h)))
 			{
 				if (enemies[i]->GetHitBox().y + enemies[i]->GetHitBox().h > m_HitBox.y + m_HitBox.h)
-					enemies[i]->SetEnemyDirection(EnemyDirection::Down);
+					enemies[i]->SetAiDirection(MovementDirection::Down);
 				else if (enemies[i]->GetHitBox().y + enemies[i]->GetHitBox().h < m_HitBox.y)
-					enemies[i]->SetEnemyDirection(EnemyDirection::Up);
+					enemies[i]->SetAiDirection(MovementDirection::Up);
 			}
 		}
 	}

@@ -7,6 +7,7 @@
 #include "TextureComponent.h"
 #include "Enemy.h"
 #include "Collision.h"
+#include "AIPhysics.h"
 
 std::vector<dae::Platform*> dae::Platform::m_ObjectList;
 
@@ -35,7 +36,7 @@ void dae::Platform::HandlePlayerCollision()
 
 void dae::Platform::HandleEnemyCollision()
 {
-    auto enemies = Enemy::GetAllInstances();
+    auto enemies = AIPhysics::GetAllInstances();
 
     for (int i = 0; i < (int)enemies.size(); ++i)
     {
@@ -53,9 +54,9 @@ void dae::Platform::HandleEnemyCollision()
             if (Collision::IsOverlapping(SDL_Rect(m_HitBox.x - 5, m_HitBox.y, m_HitBox.w + 10, m_HitBox.h), SDL_Rect(enemies[i]->GetHitBox().x, enemies[i]->GetHitBox().y + enemies[i]->GetHitBox().h, enemies[i]->GetHitBox().w, 2)))
             {
                 if (enemies[i]->GetHitBox().x < m_HitBox.x)
-                    enemies[i]->SetEnemyDirection(EnemyDirection::Right);
+                    enemies[i]->SetAiDirection(MovementDirection::Right);
                 else if (enemies[i]->GetHitBox().x + enemies[i]->GetHitBox().w > m_HitBox.x + m_HitBox.w)
-                    enemies[i]->SetEnemyDirection(EnemyDirection::Left);
+                    enemies[i]->SetAiDirection(MovementDirection::Left);
             }
         }
     }

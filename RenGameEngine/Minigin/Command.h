@@ -5,6 +5,7 @@
 #include "PlayerPhysics.h"
 #include "GameStateManager.h"
 #include "Scene.h"
+#include "Player.h"
 
 using namespace dae;
 
@@ -23,7 +24,7 @@ public:
 	virtual void Execute(int playerIdx) override 
 	{ 
 		if(typeid(* GameStateManager::GetInstance().GetCurrent().get()) == typeid(Scene))
-		PlayerPhysics::GetPlayer(playerIdx)->ThrowPepper();
+		Player::GetPlayer(playerIdx)->ThrowPepper();
 	};
 };
 

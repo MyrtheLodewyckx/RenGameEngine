@@ -10,7 +10,8 @@ namespace dae
 {
 	class LevelManager : public Singleton<LevelManager>
 	{
-		void CreatePlayer(glm::vec3 pos, Scene& scene, int controllerIdx) const;
+		void CreatePlayer(glm::vec3 pos, Scene& scene, int playerIdx) const;
+		void CreateEnemyPlayer(glm::vec3 pos, Scene& scene, int playerIdx) const;
 		std::shared_ptr<GameObject> CreateLadder(SDL_Rect hitbox, Scene& scene) const;
 		std::shared_ptr<GameObject> CreatePlatform(SDL_Rect hitbox, Scene& scene) const;
 		std::shared_ptr<GameObject> CreatePlate(SDL_Rect hitbox, Scene& scene) const;

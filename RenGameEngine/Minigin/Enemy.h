@@ -1,78 +1,56 @@
 #pragma once
 #include "Component.h"
-#include <vector>
 #include "SpriteComponent.h"
+#include "GameObject.h"
+#include "Physics.h"
 
-namespace dae
+enum class EnemyID
 {
-	enum class EnemyID
-	{
-		MrHotDog,
-		MrEgg,
-		MrPickle
-	};
+	Sausage,
+	Pickle,
+	Egg
+};
 
-	enum class EnemyDirection
-	{
-		Up,
-		Down,
-		Left,
-		Right
-	};
+class Enemy : public dae::Component
+{
+	bool m_IsStunned = false;
+	void HandlePlayerCollision();
+	void HandleStun(const float deltaTime);
 
-	class GameObject;
-	class Transform;
-	class PlayerPhysics;
-	class Enemy : public dae::Component
-	{
-		static std::vector<Enemy*> m_ObjectList;
+	float m_Timer = 0;
 
-		//SPRITES
-		std::shared_ptr<Texture2D> m_pWalkingTexture{ nullptr };
-		std::shared_ptr<Texture2D> m_pClimbingDownTexture{ nullptr };
-		std::shared_ptr<Texture2D> m_pClimbingUpTexture{ nullptr }; 
-		std::shared_ptr<Texture2D> m_pStunnedTexture{ nullptr };
-		
-		dae::Sprite m_Sprites[4]
-		{
-			{m_pClimbingDownTexture,1,2,0.25f},
-			{m_pWalkingTexture,1,2,0.25f},
-			{m_pClimbingUpTexture,1,2,0.25f},
-			{m_pStunnedTexture,1,2,0.25f}
-		};
+	static std::vector<Enemy*> m_ObjectList;
+	Physics* m_pPhysics{};
 
-		int m_Width = 0;
-		int m_Height = 0;
+	EnemyID m_ID;
 
-		EnemyDirection m_Direction;
+	dae::SpriteComponent* m_pSprite{};
+	dae::Sprite m_Sprites[4]
+	{};
 
-		int m_LadderIdx = -1;
-		int m_PlatformIdx = -1;
-		float m_Timer = 0.f;
+public:
 
+	void SetIsStunned(bool b) { m_IsStunned = b; }
 
-		bool m_IsStunned = false;
+	static std::vector<Enemy*> GetAllInstances() { return m_ObjectList; }
 
-		Transform* m_pTransform = nullptr;
-		SpriteComponent* m_pSprite = nullptr;
-		void HandleMovement(const float deltaTime);
-		void HandlePlayerCollision();
-		void HandleStun(const float deltaTime);
+	SDL_Rect GetHitBox() {
+		if (!m_pPhysics)
+			m_pPhysics = m_Go->GetComponent<Physics>(); return m_pPhysics->GetHitBox(); }
+	glm::vec3 GetPos() {
+		if (!m_pPhysics)
+			m_pPhysics = m_Go->GetComponent<Physics>(); return m_pPhysics->GetPos(); }
 
-	public:
+	virtual void Update(const float) override;
+	virtual void Render() const override {};
 
-		void SetIsStunned(bool b);
-		SDL_Rect GetHitBox();
-		void SetPos(glm::vec3 pos);
-		static std::vector<Enemy*> GetAllInstances();
-		void SetValues(EnemyID id, int height, int width);
-		Enemy(GameObject* go);
-		~Enemy();
-		virtual void Update(const float deltaTime) override;
-		virtual void Render()const override {};
-		void SetIsOverLadder(int ladderIndex);
-		void SetIsOnPlatform(int platformIndex);
-		void SetEnemyDirection(EnemyDirection direction);
+	void SetEnemyID(EnemyID id);
 
-	};
-}
+	Enemy(const Enemy& other) = delete;
+	Enemy(Enemy&& other) = delete;
+	Enemy& operator=(const Enemy& other) = delete;
+	Enemy& operator=(Enemy&& other) = delete;
+	Enemy(dae::GameObject* go) : Component(go) { m_ObjectList.emplace_back(this); }
+	~Enemy();
+
+};

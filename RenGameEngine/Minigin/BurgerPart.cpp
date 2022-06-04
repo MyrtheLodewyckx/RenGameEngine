@@ -1,6 +1,5 @@
 #include "MiniginPCH.h"
 #include "BurgerPart.h"
-#include "PlayerPhysics.h"
 #include "Events.h"
 #include "EventManager.h"
 #include "GameObject.h"
@@ -11,6 +10,7 @@
 #include "Renderer.h"
 #include "Plate.h"
 #include "Collision.h"
+#include "Player.h"
 
 std::vector<dae::BurgerPart*> dae::BurgerPart::m_ObjectList;
 
@@ -47,7 +47,7 @@ void dae::BurgerPart::CheckWinCondition()
 void dae::BurgerPart::Update(const float deltaTime)
 {
 	//MAKE SURE EVERYTHING IS INITIALIZED
-	auto players = PlayerPhysics::GetAllInstances();
+	auto players = Player::GetAllInstances();
 
 	CheckWinCondition();
 
@@ -83,7 +83,7 @@ void dae::BurgerPart::Update(const float deltaTime)
 				m_EnterPoints[i] = 0;
 				ScoreChangeEvent* e = new ScoreChangeEvent{};
 				e->amt = 50;
-				e->controllerIdx = players[i]->GetControllerIdx();
+				e->controllerIdx = players[i]->GetPlayerIdx();
 				dae::EventManager::GetInstance().AddEvent(e);
 
 			}
@@ -94,7 +94,7 @@ void dae::BurgerPart::Update(const float deltaTime)
 				m_EnterPoints[i] = 0;
 				ScoreChangeEvent* e = new ScoreChangeEvent{};
 				e->amt = 50;
-				e->controllerIdx = players[i]->GetControllerIdx();
+				e->controllerIdx = players[i]->GetPlayerIdx();
 				dae::EventManager::GetInstance().AddEvent(e);
 
 			}

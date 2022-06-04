@@ -15,11 +15,13 @@
 #include "HUDinfo.h"
 #include "TextComponent.h"
 #include "GameStateManager.h"
+#include "AIPhysics.h"
+#include "Player.h"
 
 
 void dae::LevelManager::CreatePlayer(glm::vec3 pos, Scene& scene, int controllerIdx) const
 {
-	const int playerSize = 30;
+	const float playerSize = 30.f;
 	auto player = std::make_shared<GameObject>();
 	auto spriteCom = player->AddComponent<SpriteComponent>();
 
@@ -31,12 +33,40 @@ void dae::LevelManager::CreatePlayer(glm::vec3 pos, Scene& scene, int controller
 
 	auto transformCom = player->AddComponent<Transform>();
 	transformCom->SetPosition(pos);
+	transformCom->SetDimentions(playerSize, playerSize);
 
 	auto physics = player->AddComponent<PlayerPhysics>();
 	physics->SetControllerIdx(controllerIdx);
-	physics->SetDimentions(playerSize, playerSize);
+
+	auto p = player->AddComponent<Player>();
+	p->SetPlayerIdx(controllerIdx);
 
 	scene.Add(player);
+}
+
+void dae::LevelManager::CreateEnemyPlayer(glm::vec3 pos, Scene& scene, int playerIdx) const
+{
+	const float playerSize = 30.f;
+	auto enemy = std::make_shared<GameObject>();
+	auto spriteCom = enemy->AddComponent<SpriteComponent>();
+
+	std::string texturePath = "sprites/SausageWalkingForward.png";
+
+	auto spriteTexture = ResourceManager::GetInstance().LoadTexture(texturePath);
+	Sprite sprite{ spriteTexture, 1, 2, 0.25f };
+	spriteCom->SetSprite(sprite, playerSize, 0);
+
+	auto transformCom = enemy->AddComponent<Transform>();
+	transformCom->SetPosition(pos);
+	transformCom->SetDimentions(playerSize, playerSize);
+
+	auto physics = enemy->AddComponent<PlayerPhysics>();
+	physics->SetControllerIdx(playerIdx);
+
+	auto e = enemy->AddComponent<Enemy>();
+	e->SetEnemyID(EnemyID::Sausage);
+
+	scene.Add(enemy);
 }
 
 std::shared_ptr<dae::GameObject> dae::LevelManager::CreateLadder(SDL_Rect hitbox, Scene& scene) const
@@ -174,9 +204,12 @@ void dae::LevelManager::CreateEnemy(SDL_Rect hitbox, Scene& scene, EnemyID id) c
 
 	auto transformCom = enemy->AddComponent<Transform>();
 	transformCom->SetPosition((float)hitbox.x, (float)hitbox.y, 0);
+	transformCom->SetDimentions(float(hitbox.w), float(hitbox.h));
 
-	auto physics = enemy->AddComponent<Enemy>();
-	physics->SetValues(id, hitbox.w, hitbox.h);
+	enemy->AddComponent<AIPhysics>();
+
+	auto e = enemy->AddComponent<Enemy>();
+	e->SetEnemyID(id);
 
 	scene.Add(enemy);
 }
@@ -254,7 +287,7 @@ void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 						break;
 					case 'E':
 						if (mode == dae::GameMode::Versus)
-						CreatePlayer(glm::vec3(std::stoi(match[1]), std::stoi(match[2]), 0), scene, 1);
+						CreateEnemyPlayer(glm::vec3(std::stoi(match[1]), std::stoi(match[2]), 0), scene, 1);
 						break;
 					default:
 						if (mode == dae::GameMode::Versus || mode == dae::GameMode::SinglePlayer)

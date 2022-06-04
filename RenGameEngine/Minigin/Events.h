@@ -5,6 +5,7 @@ enum struct Events
 	PLAYER_DIES = 1,
 	PLAYER_GAINS_LIFE = 2,
 	SCORE_CHANGE = 3,
+	PEPPER_CHANGE,
 
 	//LEVEL EVENTS
 	RESTART_LEVEL,
@@ -45,6 +46,16 @@ struct ScoreChangeEvent : public Event
 	int controllerIdx = 0;
 	int amt = 0;
 	virtual void PrintExtraInfo() override { std::cout << "controllerIdx: " << controllerIdx << '\n'; }
+};
+
+struct PepperChangeEvent : public Event
+{
+	PepperChangeEvent() {
+		ID = Events::PEPPER_CHANGE;
+	}
+	int PlayerIdx = 0;
+	int amt = 0;
+	virtual void PrintExtraInfo() override { std::cout << "PlayerIdx: " << PlayerIdx << '\n'; }
 };
 
 

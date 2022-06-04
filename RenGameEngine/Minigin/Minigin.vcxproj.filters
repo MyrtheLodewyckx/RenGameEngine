@@ -141,7 +141,7 @@
     <ClInclude Include="Movement.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="AIPhysics.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
@@ -167,6 +167,15 @@
     </ClInclude>
     <ClInclude Include="Keyboard.h">
       <Filter>UserInput</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -263,7 +272,7 @@
     <ClCompile Include="Movement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="AIPhysics.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
@@ -289,6 +298,12 @@
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
       <Filter>UserInput</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

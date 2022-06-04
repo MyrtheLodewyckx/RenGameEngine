@@ -206,6 +206,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="AIPhysics.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Events.h" />
@@ -235,8 +236,10 @@
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Options.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Plate.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerPhysics.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -255,6 +258,7 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="BurgerPart.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="AIPhysics.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -328,6 +332,7 @@
     <ClCompile Include="Plate.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="HUDinfo.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerPhysics.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
