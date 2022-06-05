@@ -1,11 +1,9 @@
 #include "MiniginPCH.h"
 #include "Minigin.h"
 #include <thread>
-#include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "GameObject.h"
-#include "Scene.h"
 #include "TextureComponent.h"
 #include "TextComponent.h"
 #include "EventManager.h"
@@ -13,14 +11,7 @@
 #include "FPScounter.h"
 #include "Audio.h"
 #include "InputManager.h"
-#include "PlayerPhysics.h"
-#include "Ladder.h"
-#include "Platform.h"
-#include "BurgerPart.h"
-#include "LevelManager.h"
 #include "GameStateManager.h"
-#include "MainMenu.h"
-#include "Options.h"
 
 using namespace std;
 
@@ -67,55 +58,6 @@ void dae::Minigin::Initialize()
  */
 void dae::Minigin::LoadGame() const
 {
-	//auto& scene = SceneManager::GetInstance().CreateScene("Demo");
-	
-	//auto scene = std::make_unique<Scene>();
-	//int windowWidth{};
-	//int windowHeight{};
-	//SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
-	//auto font = ResourceManager::GetInstance().LoadFont("pixel.otf", 20);
-
-	//auto backgroundParent = std::make_shared<GameObject>();
-
-	////ADD FPS COUNTER
-	//auto fps = std::make_shared<GameObject>();
-
-	//auto fpsText = fps->AddComponent<TextComponent>();
-	//fpsText->SetFont(font);
-	//fpsText->SetText("0 FPS");
-
-	//fps->AddComponent<TextureComponent>();
-
-	//auto fpsPos = fps->AddComponent<Transform>();
-	//fpsPos->SetPosition(10, 20, 0);
-
-	//fps->AddComponent<FPSCounter>();
-
-	//scene->Add(fps);
-
-	//LevelManager::GetInstance().LoadLevel("lvl1.txt",*scene.get());
-	////ADD PETER PEPPER HUD
-	//CreateHUD(glm::vec3(100,10, 0), scene.get(), 0);
-
-	////ADD PETER PEPPER
-	//CreatePlayer(glm::vec3(240, 599, 0), scene.get(), 0);
-
-	//GameStateManager::GetInstance().Add(std::move(scene));
-	//GameStateManager::GetInstance().ProcessStateChange();
-
-	auto mainMenu = std::make_unique<MainMenu>();
-	GameStateManager::GetInstance().Add(std::move(mainMenu));
-	GameStateManager::GetInstance().ProcessStateChange();
-
-
-	//ADD SALLY SALT HUD
-	//CreateHUD(glm::vec3((float)windowWidth - 170, 200, 0), scene, 1);
-
-	//ADD SALLY SALT
-	//CreatePlayer(glm::vec3(float(windowWidth - 100 - 50), 100, 0), scene, 1);
-
-
-
 }
 
 void dae::Minigin::Cleanup()

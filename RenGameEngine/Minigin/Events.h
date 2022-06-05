@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 enum struct Events
 {
 	//PLAYER EVENTS

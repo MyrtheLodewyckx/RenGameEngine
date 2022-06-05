@@ -1,6 +1,5 @@
 #include "MiniginPCH.h"
 #include "Renderer.h"
-#include "SceneManager.h"
 #include "Texture2D.h"
 #include  <chrono>
 #include "GameObject3D.h"

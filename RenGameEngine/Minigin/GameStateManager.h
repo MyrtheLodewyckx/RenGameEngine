@@ -1,11 +1,9 @@
 #pragma once
-
-#pragma once
 #include "Singleton.h"
 #include <stack>
 #include <memory>
 #include "GameState.h"
-#include "HUDinfo.h"
+#include "GameObject.h"
 
 namespace dae
 {

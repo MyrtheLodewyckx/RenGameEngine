@@ -3,6 +3,7 @@
 #include <map>
 #include "XBoxController.h"
 #include "Keyboard.h"
+#include "Singleton.h"
 
 namespace dae
 {
@@ -34,41 +35,14 @@ namespace dae
 		Direction m_direction[maxPlayers] = {};
 		Direction m_MenuDirection[maxPlayers] = {};
 
-		ThrowPepper* m_PepperCommand = new ThrowPepper{};
-		Select* m_SelectCommand = new Select{};
 
+		std::map<ControllerButton, Command*> m_ControllerCommandMap{};
 
-		std::map<ControllerButton, Command*> m_ControllerCommandMap
-		{
-			{ControllerButton::ButtonA, m_SelectCommand},
-			{ControllerButton::ButtonY,m_PepperCommand}
-		};
+		std::map<SDL_Scancode, Command*> m_Keyboard1CommandMap{};
+		std::map<SDL_Scancode, Direction> m_Keyboard1DirectionMap{};
 
-		std::map<SDL_Scancode, Command*> m_Keyboard1CommandMap
-		{
-			{SDL_SCANCODE_R,m_PepperCommand},
-			{SDL_SCANCODE_TAB, m_SelectCommand},
-		};
-		std::map<SDL_Scancode, Direction> m_Keyboard1DirectionMap
-		{
-			{SDL_SCANCODE_W,Direction::Up},
-			{SDL_SCANCODE_A,Direction::Left},
-			{SDL_SCANCODE_S,Direction::Down},
-			{SDL_SCANCODE_D,Direction::Right}
-		};
-
-		std::map<SDL_Scancode, Command*> m_Keyboard2CommandMap
-		{
-			{SDL_SCANCODE_SPACE,m_PepperCommand},
-			{SDL_SCANCODE_TAB, m_SelectCommand},
-		};
-		std::map<SDL_Scancode, Direction> m_Keyboard2DirectionMap
-		{
-			{SDL_SCANCODE_UP,Direction::Up},
-			{SDL_SCANCODE_LEFT,Direction::Left},
-			{SDL_SCANCODE_DOWN,Direction::Down},
-			{SDL_SCANCODE_RIGHT,Direction::Right}
-		};
+		std::map<SDL_Scancode, Command*> m_Keyboard2CommandMap{};
+		std::map<SDL_Scancode, Direction> m_Keyboard2DirectionMap{};
 
 		static int GetDeviceIdx(int playerIdx, InputDevices device);
 
@@ -78,6 +52,12 @@ namespace dae
 
 		InputManager();
 		~InputManager();
+
+		void AddControllerMap(std::pair<ControllerButton, Command*> map) { m_ControllerCommandMap.emplace(map); }
+		void AddKeyboard1Map(std::pair<SDL_Scancode, Command*> map) { m_Keyboard1CommandMap.emplace(map); }
+		void AddKeyboard2Map(std::pair<SDL_Scancode, Command*> map) { m_Keyboard2CommandMap.emplace(map); }
+		void AddKeyboard1DirectionMap(std::pair<SDL_Scancode, Direction> map) { m_Keyboard1DirectionMap.emplace(map); }
+		void AddKeyboard2DirectionMap(std::pair<SDL_Scancode, Direction> map) { m_Keyboard2DirectionMap.emplace(map); }
 
 		void AddPlayer(InputDevices inputDevice);
 		void RemovePlayer();

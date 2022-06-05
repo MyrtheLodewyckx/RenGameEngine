@@ -45,40 +45,10 @@
     <ClInclude Include="Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Minigin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_impl_opengl2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_impl_sdl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_plot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject3D.h">
@@ -111,50 +81,17 @@
     <ClInclude Include="Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ladder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Command.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="HUDinfo.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerPhysics.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Events.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Platform.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="BurgerPart.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Plate.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Movement.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="AIPhysics.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateManager.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>UserInput</Filter>
@@ -162,29 +99,14 @@
     <ClInclude Include="XBoxController.h">
       <Filter>UserInput</Filter>
     </ClInclude>
-    <ClInclude Include="Options.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Keyboard.h">
       <Filter>UserInput</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalValues.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Victory.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="GameOver.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="GameStateManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -204,9 +126,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
@@ -260,29 +179,8 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerPhysics.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="HUDinfo.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Ladder.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BurgerPart.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Movement.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AIPhysics.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Source Files</Filter>
@@ -296,32 +194,8 @@
     <ClCompile Include="XBoxController.cpp">
       <Filter>UserInput</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Options.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Plate.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Keyboard.cpp">
       <Filter>UserInput</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GlobalValues.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Victory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameOver.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
