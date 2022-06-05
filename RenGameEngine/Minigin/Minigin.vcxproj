@@ -41,7 +41,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -219,26 +219,43 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AIPhysics.h" />
+    <ClInclude Include="BurgerPart.h" />
+    <ClInclude Include="BurgerTimeCommands.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPScounter.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GlobalValues.h" />
+    <ClInclude Include="HUDinfo.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Ladder.h" />
+    <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="Options.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Plate.h" />
+    <ClInclude Include="Platform.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerPhysics.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="Subject.h" />
@@ -246,16 +263,24 @@
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Victory.h" />
     <ClInclude Include="XBoxController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AIPhysics.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="BurgerPart.cpp" />
+    <ClCompile Include="BurgerTime.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPScounter.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
+    <ClCompile Include="GlobalValues.cpp" />
+    <ClCompile Include="HUDinfo.cpp" />
     <ClCompile Include="Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -306,7 +331,9 @@
     </ClCompile>
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Keyboard.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Ladder.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Minigin.cpp" />
     <ClCompile Include="MiniginPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -316,13 +343,20 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MiniginPCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Movement.cpp" />
+    <ClCompile Include="Options.cpp" />
+    <ClCompile Include="Plate.cpp" />
+    <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerPhysics.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Victory.cpp" />
     <ClCompile Include="XBoxController.cpp" />
   </ItemGroup>
   <ItemGroup>

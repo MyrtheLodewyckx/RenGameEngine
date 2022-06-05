@@ -96,6 +96,7 @@ void dae::Minigin::Run()
 			auto timeNow = chrono::high_resolution_clock::now();
 			auto deltaTime = timeNow - timeLast;
 			doContinue = inputManager.ProcessInput();
+			stateManager.ProcessStateChange();
 
 			inputManager.HandleInputs();
 			stateManager.GetCurrent()->HandleInput();
@@ -103,7 +104,7 @@ void dae::Minigin::Run()
 			AudioServiceLocator::Update();
 			renderer.Render();
 
-			stateManager.ProcessStateChange();
+
 			eventManager.ProcessEvents();
 
 			//Update timeLast
