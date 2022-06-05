@@ -74,6 +74,8 @@ namespace dae
 
 
 	public:
+		bool m_IsClosingProgram = false;
+
 		InputManager();
 		~InputManager();
 

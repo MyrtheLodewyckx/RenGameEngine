@@ -76,7 +76,7 @@ void Enemy::Update(const float deltaTime)
 	else if(!m_IsFalling)
 	{
 		m_pPhysics->HandleMovement(deltaTime);
-		//HandlePlayerCollision();
+		HandlePlayerCollision();
 	}
 
 

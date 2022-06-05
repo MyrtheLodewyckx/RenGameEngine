@@ -4,6 +4,9 @@
 #include "EventManager.h"
 #include "LevelManager.h"
 #include "GamestateManager.h"
+#include "GlobalValues.h"
+#include "Victory.h"
+#include "GameOver.h"
 
 using namespace dae;
 
@@ -32,19 +35,36 @@ void Scene::Update(const float deltaTime)
 	if(e)
 	switch (e->ID)
 	{
+	case Events::GAME_OVER:
+	{
+		auto gameOver = std::make_unique<GameOver>();
+		dae::GameStateManager::GetInstance().Add(std::move(gameOver), 1);
+	}
+		break;
 	case Events::RESTART_LEVEL:
 	{
 		auto scene = std::make_unique<dae::Scene>(1);
 		dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
 		dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+
+		for (int i = 0; i < (int)GlobalValues::m_Scores.size(); ++i)
+			GlobalValues::m_Scores[i] = 0;
 	}
 		break;
 	case Events::NEXT_LEVEL:
 	{
-		auto scene = std::make_unique<dae::Scene>(++m_Level);
-		std::string lvlFile = "lvl" + std::to_string(m_Level) + ".txt";
-		dae::LevelManager::GetInstance().LoadLevel(lvlFile, *scene.get());
-		dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+		if (m_Level == 1)
+		{
+			auto victory = std::make_unique<Victory>();
+			dae::GameStateManager::GetInstance().Add(std::move(victory), 1);
+		}
+		else
+		{
+			auto scene = std::make_unique<dae::Scene>(++m_Level);
+			std::string lvlFile = "lvl" + std::to_string(m_Level) + ".txt";
+			dae::LevelManager::GetInstance().LoadLevel(lvlFile, *scene.get());
+			dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+		}
 	}
 		break;
 	}

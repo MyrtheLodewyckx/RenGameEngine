@@ -177,6 +177,15 @@
     <ClInclude Include="Enemy.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalValues.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Victory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MiniginPCH.cpp">
@@ -303,6 +312,15 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalValues.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Victory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

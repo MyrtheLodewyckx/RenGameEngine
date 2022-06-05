@@ -17,6 +17,7 @@
 #include "GameStateManager.h"
 #include "AIPhysics.h"
 #include "Player.h"
+#include "GlobalValues.h"
 
 
 void dae::LevelManager::CreatePlayer(glm::vec3 pos, Scene& scene, int controllerIdx) const
@@ -137,11 +138,10 @@ void dae::LevelManager::CreateHUD(glm::vec3 pos, int controllerIdx, Scene& scene
 
 
 	info->SetPlayerIdx(controllerIdx);
-	info->SetGlobalVariables(m_Lives[controllerIdx]);
 
 	//TEXT COMPONENT
 	auto HUDTextCom = Hud->AddComponent<TextComponent>();
-	std::string sHUDtext = "LIVES: " + std::to_string(info->GetLives());
+	std::string sHUDtext = "LIVES: " + std::to_string(GlobalValues::m_Lives[controllerIdx]);
 
 	HUDTextCom->SetFont(font);
 	HUDTextCom->SetText(sHUDtext);
@@ -161,7 +161,7 @@ void dae::LevelManager::CreateHUD(glm::vec3 pos, int controllerIdx, Scene& scene
 
 	//TEXT COMPONENT
 	auto scoreHUDTextCom = scoreHUD->AddComponent<TextComponent>();
-	std::string scoreHUDtext = "SCORE: " + std::to_string(info->GetScore());
+	std::string scoreHUDtext = "SCORE: " + std::to_string(GlobalValues::m_Scores[controllerIdx]);
 
 	scoreHUDTextCom->SetFont(font);
 	scoreHUDTextCom->SetText(scoreHUDtext);
@@ -217,16 +217,23 @@ void dae::LevelManager::CreateEnemy(SDL_Rect hitbox, Scene& scene, EnemyID id) c
 
 void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 {
+
 	std::regex info{ ".+\\(([0-9]+),([0-9]+)\\)\\(([0-9]+),([0-9]+)\\)" };
 
 	std::string line; 
 	std::smatch match;
 
 	auto mode = dae::GameStateManager::GetInstance().GetGameMode();
-	if ((mode == dae::GameMode::CoUp || mode == dae::GameMode::Versus) && m_Lives.size() == 1)
-		m_Lives.emplace_back(3);
-	else if (mode == dae::GameMode::SinglePlayer && m_Lives.size() == 2)
-		m_Lives.pop_back();
+	if ((mode == dae::GameMode::CoUp || mode == dae::GameMode::Versus) && GlobalValues::m_Lives.size() == 1)
+	{
+		GlobalValues::m_Lives.emplace_back(3);
+		GlobalValues::m_Scores.emplace_back(0);
+	}
+	else if (mode == dae::GameMode::SinglePlayer && GlobalValues::m_Lives.size() == 2)
+	{
+		GlobalValues::m_Lives.pop_back();
+		GlobalValues::m_Scores.pop_back();
+	}
 
 	
 	std::ifstream levelFile(path);
@@ -301,7 +308,7 @@ void dae::LevelManager::LoadLevel(const std::string& path, Scene& scene)
 		levelFile.close();
 	}
 
-	for (int i = 0; i < (int)m_Lives.size(); ++i)
+	for (int i = 0; i < (int)GlobalValues::m_Lives.size(); ++i)
 		CreateHUD(glm::vec3(20, 20, 0), i, scene);
 
 }

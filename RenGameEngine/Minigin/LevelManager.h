@@ -21,7 +21,6 @@ namespace dae
 	
 
 	public:
-		std::vector<int> m_Lives{3};
 		void LoadLevel(const std::string& path, Scene& scene);
 		LevelManager();
 		~LevelManager()=default;

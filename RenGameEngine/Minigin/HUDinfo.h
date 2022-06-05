@@ -8,12 +8,7 @@ namespace dae
 
 	class HUD : public Component
 	{
-
-
 		int m_PlayerIdx{};
-
-		int* m_Lives;
-		int m_Score = 0;
 		int m_Pepper = 5;
 
 		void IncrementLives();
@@ -26,10 +21,7 @@ namespace dae
 
 
 	public:
-		int GetLives() const { return *m_Lives; };
-		int GetScore() const { return m_Score; };
 		int GetControllerIdx() const { return m_PlayerIdx; };
-		void SetGlobalVariables(int& lives);
 
 		virtual void Update(const float) override;
 		virtual void Render() const override {};
