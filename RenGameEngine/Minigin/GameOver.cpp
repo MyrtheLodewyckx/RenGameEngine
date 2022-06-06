@@ -7,6 +7,7 @@
 #include "LevelManager.h"
 #include "GameStateManager.h"
 #include "Options.h"
+#include "GlobalValues.h"
 
 
 void GameOver::ControllerUpdate()
@@ -43,6 +44,7 @@ void GameOver::KeyboardUpdate()
 			auto scene = std::make_unique<dae::Scene>(1);
 			dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
 			dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+			GlobalValues::Reset();
 		}
 		break;
 		case GameOverButtons::QUIT:

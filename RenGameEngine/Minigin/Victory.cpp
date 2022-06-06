@@ -22,6 +22,7 @@ void Victory::ControllerUpdate()
 			auto scene = std::make_unique<dae::Scene>(1);
 			dae::LevelManager::GetInstance().LoadLevel("lvl1.txt", *scene.get());
 			dae::GameStateManager::GetInstance().Add(std::move(scene), 1);
+			GlobalValues::Reset();
 		}
 		break;
 		case VictoryButtons::QUIT:

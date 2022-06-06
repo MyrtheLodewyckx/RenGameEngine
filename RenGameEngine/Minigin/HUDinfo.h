@@ -22,12 +22,17 @@ namespace dae
 
 	public:
 		int GetControllerIdx() const { return m_PlayerIdx; };
+		int GetPepperAmt() const { return m_Pepper; };
 
 		virtual void Update(const float) override;
 		virtual void Render() const override {};
 
 		void SetPlayerIdx(int idx) { m_PlayerIdx = idx; };
 
+		HUD(const HUD& other) = delete;
+		HUD(HUD&& other) = delete;
+		HUD& operator=(const HUD& other) = delete;
+		HUD& operator=(HUD&& other) = delete;
 		HUD(GameObject* go) : Component(go) {}
 		~HUD() = default;
 	};

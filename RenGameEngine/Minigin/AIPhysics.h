@@ -28,6 +28,11 @@
 		virtual glm::vec3 GetPos()override { if (!m_pTransform) return glm::vec3(0, 0, 0); else return m_pTransform->GetPosition(); }
 		static std::vector<AIPhysics*> GetAllInstances();
 		virtual MovementDirection GetDirection() override { return m_Direction; }
+
+		AIPhysics(const AIPhysics& other) = delete;
+		AIPhysics(AIPhysics&& other) = delete;
+		AIPhysics& operator=(const AIPhysics& other) = delete;
+		AIPhysics& operator=(AIPhysics&& other) = delete;
 		AIPhysics(dae::GameObject* go);
 		~AIPhysics();
 		virtual void Update(const float deltaTime) override;

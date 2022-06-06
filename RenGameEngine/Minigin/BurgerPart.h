@@ -21,6 +21,10 @@ namespace dae
 		void CheckIsEnemyOn();
 		std::vector<int> m_EnemiesFallingWith{};
 	public:
+		BurgerPart(const BurgerPart& other) = delete;
+		BurgerPart(BurgerPart&& other) = delete;
+		BurgerPart& operator=(const BurgerPart& other) = delete;
+		BurgerPart& operator=(BurgerPart&& other) = delete;
 		BurgerPart(GameObject* go);
 		~BurgerPart();
 		virtual void Update(const float deltaTime) override;

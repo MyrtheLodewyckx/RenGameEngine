@@ -174,6 +174,26 @@ void dae::LevelManager::CreateHUD(glm::vec3 pos, int controllerIdx, Scene& scene
 	scoreHUD->AddComponent<TextureComponent>();
 
 	scene.Add(scoreHUD);
+
+	////CHILD COMPONENT PEPPER TEXT
+	//auto pepperHUD = std::make_shared<GameObject>();
+	//pepperHUD->SetParent(Hud.get());
+
+	////TEXT COMPONENT
+	//auto pepperHUDTextCom = pepperHUD->AddComponent<TextComponent>();
+	//scoreHUDtext = "PEPPER: " + std::to_string(info->GetPepperAmt());
+
+	//pepperHUDTextCom->SetFont(font);
+	//pepperHUDTextCom->SetText(scoreHUDtext);
+
+	////TRANSFORM COMPONENT
+	//auto pepperHUDTransformCom = scoreHUD->AddComponent<Transform>();
+	//pepperHUDTransformCom->SetPosition(pos.x + 550, pos.y + 50 * controllerIdx, pos.z);
+
+	////TEXTURE COMPONENT
+	//pepperHUD->AddComponent<TextureComponent>();
+
+	//scene.Add(pepperHUD);
 }
 
 std::shared_ptr<dae::GameObject> dae::LevelManager::CreateBurgerPart(SDL_Rect hitbox, std::string path, Scene& scene) const
