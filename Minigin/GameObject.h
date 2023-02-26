@@ -1,20 +1,20 @@
 #pragma once
 #include <memory>
 #include "Transform.h"
+#include "Component.h"
+#include <list>
 
 namespace dae
 {
-	class Texture2D;
-
-	// todo: this should become final.
-	class GameObject 
+	class GameObject final
 	{
 	public:
-		virtual void Update();
+		virtual void Update(const float deltaTime);
+		virtual void FixedUpdate(const float fixedTimeStep);
 		virtual void Render() const;
 
-		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
+		glm::vec3 GetWorldPosition();
 
 		GameObject() = default;
 		virtual ~GameObject();
@@ -23,9 +23,47 @@ namespace dae
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
+
+		//COMPONENTS
+		template <typename T> T* AddComponent() 
+		{
+			T* comp = new T(this);
+			m_Components.push_back(dynamic_cast<Component*>(comp));
+
+			return comp;
+		}
+
+		template <typename T> T* GetComponent()
+		{
+			for (Component* c : m_Components)
+			{
+				T* result = dynamic_cast<T*>(c);
+				if (result != nullptr)
+					return result;
+			}
+
+			return nullptr;
+		}
+
+		template <typename T> void RemoveComponent()
+		{
+			for (std::shared_ptr<Component> c : m_Components)
+			{
+				T* result = dynamic_cast<T*>(c);
+				if (result != nullptr)
+				{
+					c->m_LocalPosition = c->m_LocalPosition + m_transform.GetPosition();
+					c->m_GameObject = nullptr;
+
+					delete c;
+					c = nullptr;
+				}
+			}
+		}
+		
+
 	private:
 		Transform m_transform{};
-		// todo: mmm, every gameobject has a texture? Is that correct?
-		std::shared_ptr<Texture2D> m_texture{};
+		std::list<Component*> m_Components{};
 	};
 }

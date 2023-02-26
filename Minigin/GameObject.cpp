@@ -3,22 +3,45 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-dae::GameObject::~GameObject() = default;
+dae::GameObject::~GameObject()
+{
+	for (Component* c : m_Components)
+	{
+		delete c;
+		c = nullptr;
+	}
+}
 
-void dae::GameObject::Update(){}
+void dae::GameObject::Update(const float deltaTime)
+{
+	for (Component* c : m_Components)
+	{
+		c->Update(deltaTime);
+	}
+}
+
+void dae::GameObject::FixedUpdate(const float fixedTimeStep)
+{
+	for (Component* c : m_Components)
+	{
+		c->FixedUpdate(fixedTimeStep);
+	}
+}
 
 void dae::GameObject::Render() const
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-}
-
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
+	for (const Component* c : m_Components)
+	{
+		c->Render();
+	}
 }
 
 void dae::GameObject::SetPosition(float x, float y)
 {
 	m_transform.SetPosition(x, y, 0.0f);
+}
+
+glm::vec3 dae::GameObject::GetWorldPosition()
+{
+	return m_transform.GetPosition();
 }
