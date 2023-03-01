@@ -8,11 +8,15 @@ namespace dae
 
 class Component
 {
+	bool m_IsMarkedForDeletion{ false };
+
 protected:
 	dae::GameObject* m_GameObject{ nullptr };
-	glm::vec3 m_LocalPosition{};
 
 public:
+
+	bool GetIsMarkedForDeletion() { return m_IsMarkedForDeletion; }
+	void SetIsMarkedForDeletion(bool b) { m_IsMarkedForDeletion = b; }
 
 	Component(dae::GameObject* go) : m_GameObject(go) {}
 	virtual ~Component() = default;

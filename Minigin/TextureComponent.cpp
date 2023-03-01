@@ -1,7 +1,8 @@
-#include "TextureComp.h"
+#include "TextureComponent.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "GameObject.h"
+#include "TransformComponent.h"
 
 TextureComponent::TextureComponent(dae::GameObject* go)
 	:Component(go)
@@ -24,17 +25,17 @@ void TextureComponent::SetTexture(std::shared_ptr<dae::Texture2D> texture)
 
 void TextureComponent::Render() const
 {
-	glm::vec3 pos{ m_LocalPosition };
-	if (m_GameObject)
-		pos += m_GameObject->GetWorldPosition();
 
-	dae::Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+	dae::Renderer::GetInstance().RenderTexture(*m_texture, m_pos.x, m_pos.y);
 }
 
 void TextureComponent::Update(const float)
 {
+	if (m_NeedsUpdate)
+	{
+		m_pos = m_GameObject->GetComponent<dae::TransformComponent>()->GetPosition();
+		m_NeedsUpdate = false;
+	}
 }
 
-void TextureComponent::FixedUpdate(const float )
-{
-}
+

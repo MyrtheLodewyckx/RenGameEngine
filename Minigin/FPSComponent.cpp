@@ -1,6 +1,6 @@
-#include "FPSComp.h"
+#include "FPSComponent.h"
 #include "GameObject.h"
-#include "TextComp.h"
+#include "TextComponent.h"
 
 FPSComponent::FPSComponent(dae::GameObject* go)
 	:Component(go)
@@ -32,10 +32,3 @@ void FPSComponent::Update(const float deltaTime)
 
 }
 
-void FPSComponent::FixedUpdate(const float)
-{
-}
-
-void FPSComponent::Render() const
-{
-}

@@ -1,9 +1,9 @@
-#include "TextComp.h"
+#include "TextComponent.h"
 #include "font.h"
 #include <stdexcept>
 #include "GameObject.h"
 #include "Renderer.h"
-#include "TextureComp.h"
+#include "TextureComponent.h"
 #include "Texture2D.h"
 
 
@@ -56,12 +56,4 @@ void textComponent::Update(const float)
 
 		m_needsUpdate = false;
 	}
-}
-
-void textComponent::FixedUpdate(const float)
-{
-}
-
-void textComponent::Render() const
-{
 }

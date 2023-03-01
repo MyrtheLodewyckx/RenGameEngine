@@ -57,14 +57,17 @@
     <ClInclude Include="Component.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="TextureComp.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="FPSComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextComp.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="TextComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FPSComp.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,16 +107,19 @@
     <ClCompile Include="Minigin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureComp.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="TextComp.cpp">
+    <ClCompile Include="FPSComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FPSComp.cpp">
+    <ClCompile Include="TextComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

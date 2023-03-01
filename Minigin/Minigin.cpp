@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <chrono>
+#include <thread>
 
 SDL_Window* g_window{};
 
@@ -86,7 +87,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 	// todo: this update loop could use some work.
 
-	float fixedTimeStep = 1.f;
+	float fixedTimeStep = 5.f;
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	float lag = 0.0f;
 
@@ -106,6 +107,11 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		doContinue = input.ProcessInput();
 		sceneManager.Update(deltaTime);
 		renderer.Render();
+
+		//sleep when frame is too fast
+		auto sleepTime = fixedTimeStep - deltaTime;
+		if (sleepTime > 0)
+			std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(sleepTime));
 
 		lastTime = currentTime;
 	}
