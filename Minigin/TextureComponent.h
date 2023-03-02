@@ -8,8 +8,6 @@
 class TextureComponent: public Component
 {
 	std::shared_ptr<dae::Texture2D> m_texture{};
-	glm::vec3 m_pos{};
-	bool m_NeedsUpdate{ true };
 
 public: 
 	TextureComponent(dae::GameObject* go);
@@ -18,5 +16,4 @@ public:
 	void SetTexture(std::shared_ptr<dae::Texture2D> texture);
 
 	virtual void Render() const override;
-	virtual void Update(const float deltaTime) override;
 };

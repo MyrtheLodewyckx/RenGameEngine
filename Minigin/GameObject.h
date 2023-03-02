@@ -18,7 +18,9 @@ namespace dae
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
-		void SetParent(GameObject* go);
+		void SetParent(std::shared_ptr<GameObject> go);
+		void SetPosition(float x, float y, float z);
+		glm::vec3 GetGlobalPos();
 
 
 		//COMPONENTS
@@ -56,8 +58,13 @@ namespace dae
 		
 
 	private:
+		glm::vec3 m_GlobalPosition{};
+		glm::vec3 m_LocalPosition{};
+
+		bool m_GlobalPosFlag{false};
+
 		std::list<Component*> m_Components{};
 		std::list<GameObject*> m_Children{};
-		GameObject* m_Parent{};
+		std::shared_ptr<GameObject> m_Parent{};
 	};
 }
