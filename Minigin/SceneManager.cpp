@@ -1,7 +1,19 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+<<<<<<< Updated upstream
 void dae::SceneManager::Update()
+=======
+void dae::SceneManager::Initialize()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->Initialize();
+	}
+}
+
+void dae::SceneManager::Update(const float deltaTime)
+>>>>>>> Stashed changes
 {
 	for(auto& scene : m_scenes)
 	{

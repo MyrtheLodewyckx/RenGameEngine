@@ -9,7 +9,7 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 
 Scene::~Scene() = default;
 
-void Scene::Add(std::shared_ptr<GameObject> object)
+void Scene::Add(const std::shared_ptr<GameObject>& object)
 {
 	m_objects.emplace_back(std::move(object));
 }
@@ -24,11 +24,35 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
+<<<<<<< Updated upstream
 void Scene::Update()
 {
 	for(auto& object : m_objects)
 	{
 		object->Update();
+=======
+void Scene::Initialize()
+{
+	for(auto& object: m_objects)
+	{
+		object->Initialize();
+	}
+}
+
+void Scene::Update(const float deltaTime)
+{
+	for(auto& object : m_objects)
+	{
+		object->Update(deltaTime);
+	}
+}
+
+void Scene::FixedUpdate(const float fixedTimeStep)
+{
+	for (auto& object : m_objects)
+	{
+		object->FixedUpdate(fixedTimeStep);
+>>>>>>> Stashed changes
 	}
 }
 
