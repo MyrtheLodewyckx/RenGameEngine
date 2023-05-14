@@ -9,12 +9,6 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
-<<<<<<< Updated upstream
-=======
-#include <chrono>
-#include <thread>
-#include "Scene.h"
->>>>>>> Stashed changes
 
 SDL_Window* g_window{};
 
@@ -46,7 +40,7 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 }
 
-dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName)
+dae::Minigin::Minigin(const std::string &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -56,7 +50,7 @@ dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName
 	}
 
 	g_window = SDL_CreateWindow(
-		windowName.c_str(),
+		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		640,
@@ -81,56 +75,20 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<dae::Scene* ()>& load)
+void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 
-<<<<<<< Updated upstream
 	// todo: this update loop could use some work.
-=======
-	sceneManager.Initialize();
-
-	float fixedTimeStep = 5.f;
-	auto lastTime = std::chrono::high_resolution_clock::now();
-	float lag = 0.0f;
-
->>>>>>> Stashed changes
 	bool doContinue = true;
-
 	while (doContinue)
 	{
-<<<<<<< Updated upstream
 		doContinue = input.ProcessInput();
 		sceneManager.Update();
 		renderer.Render();
-=======
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
-
-		doContinue = input.ProcessInput(deltaTime);
-
-		lag += deltaTime;
-		while (lag >= fixedTimeStep)
-		{
-			sceneManager.FixedUpdate(fixedTimeStep);
-			lag -= fixedTimeStep;
-		}
-
-		sceneManager.Update(deltaTime);
-		renderer.Render();
-
-
-		//sleep when frame is too fast
-		auto sleepTime = fixedTimeStep - deltaTime;
-		if (sleepTime > 0)
-			std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(sleepTime));
-
-		lastTime = currentTime;
->>>>>>> Stashed changes
 	}
-
-
 }
