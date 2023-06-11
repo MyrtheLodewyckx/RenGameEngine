@@ -39,13 +39,12 @@ bool Keyboard::SDLInputImpl::IsPressed(SDL_Scancode key) const
 
 bool Keyboard::SDLInputImpl::IsDown(SDL_Scancode key) const
 {
-	const Uint8* keystate = SDL_GetKeyboardState(nullptr);
+	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 	return keystate[key];
 }
 
 
-Keyboard::Keyboard(dae::GameObject* go)
-	:PlayerController(go)
+Keyboard::Keyboard()
 {
 	m_pImpl = new SDLInputImpl();
 }
@@ -59,6 +58,24 @@ Keyboard::~Keyboard()
 void Keyboard::ProcessInput(const float) const
 {
 	m_pImpl->ProcessInput();
+
+	for (const auto& button : m_KeyboardCommandMap)
+	{
+		if (button.second.first == KeyState::IsPressed)
+			if (IsPressed(button.first))
+			{
+				if(button.second.second)
+				button.second.second->Execute();
+				continue;
+			}
+
+		if (button.second.first == KeyState::IsDown)
+			if (IsDown(button.first))
+			{
+				if (button.second.second)
+				button.second.second->Execute();
+			}
+	}
 }
 
 bool Keyboard::IsPressed(SDL_Scancode key) const
@@ -71,7 +88,15 @@ bool Keyboard::IsDown(SDL_Scancode key) const
 	return m_pImpl->IsDown(key);
 }
 
-void Keyboard::AddCommand(SDL_Scancode key, Command* pCommand)
+void Keyboard::AddCommand(SDL_Scancode key, KeyState state, Command* pCommand)
 {
-	m_KeyboardCommandMap.try_emplace(key, pCommand);
+	if (m_KeyboardCommandMap.contains(key))
+		m_KeyboardCommandMap.erase(key);
+
+	m_KeyboardCommandMap.emplace(key, Button{ state, pCommand });
+}
+
+void Keyboard::ClearCommands()
+{
+	m_KeyboardCommandMap.clear();
 }

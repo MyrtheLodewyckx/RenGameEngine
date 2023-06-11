@@ -9,7 +9,7 @@ float GeoUtils::cross(glm::vec2 p1, glm::vec2 p2)
 
 bool GeoUtils::IsPointInRect(const glm::vec2& p, const SDL_Rect& r)
 {
-	return ((int)p.x >= r.x &&
+return ((int)p.x >= r.x &&
 		(int)p.x <= r.x + r.w &&
 		(int)p.y >= r.y &&
 		(int)p.y <= r.y + r.h);

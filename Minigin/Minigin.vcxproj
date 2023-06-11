@@ -191,8 +191,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<< Updated upstream
-=======
     <ClInclude Include="..\3rdParty\imgui-1.86\imgui-1.86\backends\imgui_impl_opengl2.h" />
     <ClInclude Include="..\3rdParty\imgui-1.86\imgui-1.86\backends\imgui_impl_sdl.h" />
     <ClInclude Include="..\3rdParty\imgui-1.86\imgui-1.86\imconfig.h" />
@@ -207,11 +205,9 @@
     <ClInclude Include="Controller.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Events.h" />
->>>>>>> Stashed changes
     <ClInclude Include="Font.h" />
+    <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameState.h" />
-    <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
@@ -223,19 +219,14 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
-<<<<<<< Updated upstream
-    <ClInclude Include="TextObject.h" />
-=======
     <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="SurfaceTexture2D.h" />
     <ClInclude Include="TextComponent.h" />
->>>>>>> Stashed changes
     <ClInclude Include="Texture2D.h" />
-    <ClInclude Include="Transform.h" />
+    <ClInclude Include="TextureComponent.h" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< Updated upstream
-=======
     <ClCompile Include="..\3rdParty\imgui-1.86\imgui-1.86\backends\imgui_impl_opengl2.cpp" />
     <ClCompile Include="..\3rdParty\imgui-1.86\imgui-1.86\backends\imgui_impl_sdl.cpp" />
     <ClCompile Include="..\3rdParty\imgui-1.86\imgui-1.86\imgui.cpp" />
@@ -247,10 +238,9 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="EventManager.cpp" />
->>>>>>> Stashed changes
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -260,15 +250,12 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-<<<<<<< Updated upstream
-    <ClCompile Include="TextObject.cpp" />
-=======
     <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="SurfaceTexture2D.cpp" />
     <ClCompile Include="TextComponent.cpp" />
->>>>>>> Stashed changes
     <ClCompile Include="Texture2D.cpp" />
-    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

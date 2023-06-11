@@ -3,8 +3,7 @@
 
 
 
-PlayerController::PlayerController(dae::GameObject* go)
-:Component(go)
+PlayerController::PlayerController()
 {
 	m_playerIdx = m_AmtOfPlayers;
 	++m_AmtOfPlayers;

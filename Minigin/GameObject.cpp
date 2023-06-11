@@ -3,16 +3,6 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-<<<<<<< Updated upstream
-dae::GameObject::~GameObject() = default;
-
-void dae::GameObject::Update(){}
-
-void dae::GameObject::Render() const
-{
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-=======
 dae::GameObject::~GameObject()
 {
 }
@@ -57,14 +47,18 @@ void dae::GameObject::Render() const
 	{
 		c->Render();
 	}
->>>>>>> Stashed changes
 }
 
-void dae::GameObject::SetTexture(const std::string& filename)
+void dae::GameObject::PostRender() const
 {
-<<<<<<< Updated upstream
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
-=======
+	for (const auto& c : m_Components)
+	{
+		c->PostRender();
+	}
+}
+
+void dae::GameObject::SetParent(std::shared_ptr<GameObject> go)
+{
 	//THINK ABOUT POSITION
 
 	if (m_Parent)
@@ -74,10 +68,60 @@ void dae::GameObject::SetTexture(const std::string& filename)
 
 	if(go)
 	go->m_Children.push_back(this);
->>>>>>> Stashed changes
 }
 
-void dae::GameObject::SetPosition(float x, float y)
+void dae::GameObject::SetPosition(float x, float y, float z)
 {
-	m_transform.SetPosition(x, y, 0.0f);
+	m_LocalPosition = { x,y,z };
+	m_GlobalPosFlag = true;
+	for (auto& child : m_Children)
+	{
+		child->m_GlobalPosFlag = true;
+	}
 }
+
+void dae::GameObject::SetPosition(glm::vec3 pos)
+{
+	SetPosition(pos.x, pos.y, pos.z);
+}
+
+glm::vec3 dae::GameObject::GetGlobalPos()
+{
+	if (m_IsMarkedForDeletion)
+		return{ 0,0,0 };
+
+	if (m_GlobalPosFlag)
+	{
+		glm::vec3 newPos{m_LocalPosition};
+		std::shared_ptr<GameObject> current = this->m_Parent;
+
+		while (current)
+		{
+			if (!current->m_GlobalPosFlag)
+			{
+				newPos += current->m_GlobalPosition;
+				current = nullptr;
+			}
+			else
+			{
+				newPos += current->m_LocalPosition;
+				current = current->m_Parent;
+			}
+		}
+
+		m_GlobalPosition = newPos;
+		m_GlobalPosFlag = false;
+	}
+	return m_GlobalPosition;
+}
+
+void dae::GameObject::remove()
+{
+	m_IsMarkedForDeletion = true;
+}
+
+bool dae::GameObject::GetIsMarkedForDeletion()
+{
+	return m_IsMarkedForDeletion;
+}
+

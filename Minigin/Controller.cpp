@@ -93,8 +93,8 @@ bool Controller::XInputImpl::IsDown(ControllerButton button, int controllerIdx) 
 
 //INPUT MANAGER
 
-Controller::Controller(dae::GameObject* go)
-	:PlayerController(go)
+Controller::Controller()
+	:PlayerController()
 {
 	m_ControllerIdx = m_AmtOfControllers;
 	++m_AmtOfControllers;
@@ -104,6 +104,7 @@ Controller::Controller(dae::GameObject* go)
 Controller::~Controller()
 {
 	std::cout << "destructor called";
+	--m_AmtOfControllers;
 	delete m_pImpl;
 	m_pImpl = nullptr;
 }
@@ -114,27 +115,39 @@ void Controller::ProcessInput(const float deltaTime) const
 
 	for(const auto& button: m_ControllerCommandMap)
 	{
-		if (button.first.first == ControllerButton::LEFT_THUMB)
+		if (button.first == ControllerButton::LEFT_THUMB)
 		{
 			int x{};
 			int y{};
 			GetLeftJoystickInput(x, y);
-			button.second->Execute((float)x, (float)y, deltaTime);
+			if (button.second.second && (abs(x) > 0.00001f || abs(y) > 0.00001f))
+				button.second.second->Execute((float)x, (float)y, deltaTime);
 
 			continue;
 		}
 
-		if(button.first.second == KeyState::IsPressed)
-			if (IsPressed(button.first.first))
+		if (button.first == ControllerButton::RIGHT_THUMB)
+		{
+			int x{};
+			int y{};
+			GetRightJoystickInput(x, y);
+			if (button.second.second && (abs(x) > 0.00001f || abs(y) > 0.00001f))
+			button.second.second->Execute((float)x, (float)y, deltaTime);
+
+			continue;
+		}
+
+		if(button.second.first == KeyState::IsPressed)
+			if (IsPressed(button.first) && button.second.second)
 			{
-				button.second->Execute();
+				button.second.second->Execute();
 				continue;
 			}
 
-		if (button.first.second == KeyState::IsDown)
-			if (IsDown(button.first.first))
+		if (button.second.first == KeyState::IsDown)
+			if (IsDown(button.first) && button.second.second)
 			{
-				button.second->Execute();
+				button.second.second->Execute();
 			}
 	}
 }
@@ -161,5 +174,13 @@ void Controller::GetRightJoystickInput(int& XAxis, int& YAxis) const
 
 void Controller::AddCommand(ControllerButton button, KeyState state, Command* pCommand)
 {
-	m_ControllerCommandMap.try_emplace(Button{button,state}, pCommand);
+	if (m_ControllerCommandMap.contains(button))
+		m_ControllerCommandMap.erase(button);
+
+		m_ControllerCommandMap.emplace(button, Button{ state, pCommand });
+}
+
+void Controller::ClearCommands()
+{
+	m_ControllerCommandMap.clear();
 }

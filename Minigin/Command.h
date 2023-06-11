@@ -18,7 +18,7 @@ public:
 	Command& operator=(Command&& other)	noexcept = delete;
 
 	virtual void Execute() {};
-	virtual void Execute(float x, float y, const float deltaTime) =0;
+	virtual void Execute(float /*x*/, float /*y*/, const float /*deltaTime*/) {};
 
 	dae::GameObject* player{};
 };

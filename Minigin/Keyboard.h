@@ -6,19 +6,21 @@
 
 class Command;
 
-class Keyboard: public PlayerController
+class Keyboard
 {
 	class SDLInputImpl;
 	SDLInputImpl* m_pImpl{};
-	std::map<SDL_Scancode, Command*> m_KeyboardCommandMap{};
+	using Button = std::pair<KeyState, Command*>;
+	std::map<SDL_Scancode, Button> m_KeyboardCommandMap{};
 public:
-		Keyboard(dae::GameObject* go);
-		~Keyboard() override;
+		Keyboard();
+		~Keyboard() ;
 
-		void ProcessInput(const float deltaTime) const override;
+		void ProcessInput(const float deltaTime) const;
 		bool IsPressed(SDL_Scancode key) const;
 		bool IsDown(SDL_Scancode key) const;
 
-		void AddCommand(SDL_Scancode key, Command* pCommand);
+		void AddCommand(SDL_Scancode key, KeyState state, Command* pCommand);
+		void ClearCommands();
 };
 

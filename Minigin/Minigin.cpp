@@ -9,12 +9,12 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
-<<<<<<< Updated upstream
-=======
 #include <chrono>
 #include <thread>
+
+#include "EventManager.h"
 #include "Scene.h"
->>>>>>> Stashed changes
+#include "SoundSystem.h"
 
 SDL_Window* g_window{};
 
@@ -46,7 +46,7 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 }
 
-dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName)
+dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName, int windowWidth, int windowHeight)
 {
 	PrintSDLVersion();
 	
@@ -59,8 +59,8 @@ dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName
 		windowName.c_str(),
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		640,
-		480,
+		windowWidth,
+		windowHeight,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr) 
@@ -83,34 +83,30 @@ dae::Minigin::~Minigin()
 
 void dae::Minigin::Run(const std::function<dae::Scene* ()>& load)
 {
+	//_CrtSetBreakAlloc(8335);
 	load();
+	auto& eventManager = EventManager::GetInstance();
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+	auto ss = std::make_shared<sdl_sound_system>();
+	AudioServiceLocator::register_sound_system(ss.get());
 
-<<<<<<< Updated upstream
-	// todo: this update loop could use some work.
-=======
 	sceneManager.Initialize();
 
 	float fixedTimeStep = 5.f;
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	float lag = 0.0f;
 
->>>>>>> Stashed changes
 	bool doContinue = true;
 
 	while (doContinue)
 	{
-<<<<<<< Updated upstream
-		doContinue = input.ProcessInput();
-		sceneManager.Update();
-		renderer.Render();
-=======
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
 
 		doContinue = input.ProcessInput(deltaTime);
+		sceneManager.ProcessStateChange();
 
 		lag += deltaTime;
 		while (lag >= fixedTimeStep)
@@ -120,6 +116,7 @@ void dae::Minigin::Run(const std::function<dae::Scene* ()>& load)
 		}
 
 		sceneManager.Update(deltaTime);
+		AudioServiceLocator::Update();
 		renderer.Render();
 
 
@@ -128,8 +125,8 @@ void dae::Minigin::Run(const std::function<dae::Scene* ()>& load)
 		if (sleepTime > 0)
 			std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(sleepTime));
 
+		eventManager.ProcessEvents();
 		lastTime = currentTime;
->>>>>>> Stashed changes
 	}
 
 

@@ -6,7 +6,12 @@
 enum SoundId
 {
 	PLAYER_DIES,
-	SCORE_UP
+	MUNCH_1,
+	MUNCH_2,
+	EAT_FRUIT,
+	EAT_GHOST,
+	POWER_PELLET,
+	INTERMISSION
 };
 
 class AudioClip

@@ -1,28 +1,19 @@
 #pragma once
 #include <memory>
-#include "Transform.h"
+#include "Component.h"
+#include <list>
 
 namespace dae
 {
-	class Texture2D;
-
-	// todo: this should become final.
-	class GameObject 
+	class GameObject final
 	{
 	public:
-<<<<<<< Updated upstream
-		virtual void Update();
-		virtual void Render() const;
-=======
 
 		void Initialize();
 		void Update(const float deltaTime);
 		void FixedUpdate(const float fixedTimeStep);
+		void PostRender() const;
 		void Render() const;
->>>>>>> Stashed changes
-
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
 
 		GameObject() = default;
 		virtual ~GameObject();
@@ -30,24 +21,19 @@ namespace dae
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
-<<<<<<< Updated upstream
-
-	private:
-		Transform m_transform{};
-		// todo: mmm, every gameobject has a texture? Is that correct?
-		std::shared_ptr<Texture2D> m_texture{};
-=======
 		void SetParent(std::shared_ptr<GameObject> go);
 		void SetPosition(float x, float y, float z);
+		void SetPosition(glm::vec3 pos);
 		glm::vec3 GetGlobalPos();
 
+		void remove();
+		bool GetIsMarkedForDeletion();
 
 		//COMPONENTS
 		template <typename T> std::shared_ptr<T> AddComponent() 
 		{
 			std::shared_ptr<T> comp = std::make_shared<T>(this);
 			m_Components.push_back(std::dynamic_pointer_cast<Component>(comp));
-
 			return comp;
 		}
 
@@ -85,6 +71,7 @@ namespace dae
 		std::list<std::shared_ptr<Component>> m_Components{};
 		std::list<GameObject*> m_Children{};
 		std::shared_ptr<GameObject> m_Parent{};
->>>>>>> Stashed changes
+
+		bool m_IsMarkedForDeletion{false};
 	};
 }

@@ -7,49 +7,32 @@
 #endif
 #endif
 
+#include "Controller.h"
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "Scene.h"
-#include "TextureComponent.h"
-#include "GameObject.h"
-#include "TextComponent.h"
-#include "FPSComponent.h"
-#include "PacMan.h"
-#include "Renderer.h"
+#include "MainMenu.h"
 
 
 dae::Scene* load()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
+	auto player1Controller = std::make_unique<Controller>();
+	dae::InputManager::GetInstance().AddController(std::move(player1Controller));
+	auto player2Controller = std::make_unique<Controller>();
+	dae::InputManager::GetInstance().AddController(std::move(player2Controller));
 
-
-
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Fonts/pixel.otf", 20);
-	auto go = std::make_shared<dae::GameObject>();
-	auto textureComponent = go->AddComponent<TextureComponent>();
-	auto txtComponent = go->AddComponent<textComponent>();
-	txtComponent->SetFont(font);
-	txtComponent->SetText("FPS");
-	txtComponent->SetColor(SDL_Color(255,0,0));
-	go->AddComponent<FPSComponent>();
-	go->SetPosition(2, 2, 0);
-	scene.Add(go);
-
-	//PACMAN
-
-	go = std::make_shared<dae::GameObject>();
-	go->AddComponent<PacMan>();
-	go->SetPosition(0, 0, 0);
-	scene.Add(go);
-
-
-	return &scene;
+	auto scene = std::make_unique<MainMenu>();
+	dae::SceneManager::GetInstance().Add(std::move(scene));
+	dae::SceneManager::GetInstance().ProcessStateChange();
+	return scene.get();
 }
 
 int main(int, char* [])
 {
-	dae::Minigin engine("../Data/", "Programming 4: PACMAN");
+	dae::Minigin engine("../Data/","PACMAN", 560, 760);
+
+
 	engine.Run(load);
 	return 0;
 }

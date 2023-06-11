@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "GameObject.h"
+#include "InputManager.h"
 
 using namespace dae;
 
@@ -7,7 +8,8 @@ unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(const std::string& name) : m_name(name) {}
 
-Scene::~Scene() = default;
+
+Scene::~Scene() { }
 
 void Scene::Add(const std::shared_ptr<GameObject>& object)
 {
@@ -24,13 +26,6 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
-<<<<<<< Updated upstream
-void Scene::Update()
-{
-	for(auto& object : m_objects)
-	{
-		object->Update();
-=======
 void Scene::Initialize()
 {
 	for(auto& object: m_objects)
@@ -45,6 +40,12 @@ void Scene::Update(const float deltaTime)
 	{
 		object->Update(deltaTime);
 	}
+
+	for (auto& object : m_objects)
+	{
+		if (object && object->GetIsMarkedForDeletion())
+			Remove(object);
+	}
 }
 
 void Scene::FixedUpdate(const float fixedTimeStep)
@@ -52,7 +53,6 @@ void Scene::FixedUpdate(const float fixedTimeStep)
 	for (auto& object : m_objects)
 	{
 		object->FixedUpdate(fixedTimeStep);
->>>>>>> Stashed changes
 	}
 }
 
@@ -61,6 +61,14 @@ void Scene::Render() const
 	for (const auto& object : m_objects)
 	{
 		object->Render();
+	}
+}
+
+void dae::Scene::PostRender() const
+{
+	for (const auto& object : m_objects)
+	{
+		object->PostRender();
 	}
 }
 

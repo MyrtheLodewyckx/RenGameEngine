@@ -30,7 +30,7 @@ namespace dae
 
 	public:
 		bool m_IsRendering = true;
-		SpriteComponent(GameObject* go) : Component(go) {}
+		SpriteComponent(dae::GameObject* go) : Component(go) {}
 		~SpriteComponent() = default;
 
 		virtual void Update(const float) override;
@@ -38,11 +38,15 @@ namespace dae
 
 		void SetSprite(Sprite sprite, float width, float height);
 		void SetSprite(Sprite sprite, float width, float height, SDL_RendererFlip);
-
+		void SetRowsCols(int rows, int cols);
 		void Resize(int width, int height);
 
 		float GetWidth() const;
 		float GetHeight() const;
+
+		void Reset();
+
+		float GetSpriteTime();
 	
 	};
 }

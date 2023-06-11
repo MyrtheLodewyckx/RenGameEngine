@@ -15,8 +15,13 @@ std::vector<AudioClip*> sound_system::m_Clips{};
 
 AudioClip clips[]
 {
-	{int(PLAYER_DIES),"../Data/SoundEffects/LoseLifeFunny.wav"},
-	{int(SCORE_UP),"../Data/SoundEffects/GainPoints.wav"}
+	{int(PLAYER_DIES),"../Data/SoundEffects/Death.wav"},
+	{int(MUNCH_1),"../Data/SoundEffects/Munch_1.wav"},
+	{int(MUNCH_2),"../Data/SoundEffects/Munch_2.wav"},
+	{int(EAT_FRUIT),"../Data/SoundEffects/Eat_Fruit.wav" },
+	{int(EAT_GHOST),"../Data/SoundEffects/Eat_Ghost.wav" },
+	{int(POWER_PELLET),"../Data/SoundEffects/Power_Pellet.wav" },
+	{int(INTERMISSION),"../Data/SoundEffects/Intermission.wav" }
 };
 
 

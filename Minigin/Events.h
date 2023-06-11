@@ -6,7 +6,7 @@ class Event
 {
 public:
 	Event() = default;
-	~Event() = default;
+	virtual ~Event() = default;
 	int ID {};
 	virtual void PrintExtraInfo() { std::cout << "No extra info\n"; }
 };

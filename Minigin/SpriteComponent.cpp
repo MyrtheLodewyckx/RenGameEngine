@@ -54,6 +54,12 @@ void dae::SpriteComponent::SetSprite(Sprite sprite, float width, float height, S
 	m_Flip = flip;
 }
 
+void dae::SpriteComponent::SetRowsCols(int rows, int cols)
+{
+	m_Sprite.columns = cols;
+	m_Sprite.rows = rows;
+}
+
 void dae::SpriteComponent::Resize(int width, int height)
 {
 	m_DestHeight = (float)height;
@@ -68,4 +74,14 @@ float dae::SpriteComponent::GetWidth() const
 float dae::SpriteComponent::GetHeight() const
 {
 	return m_DestHeight;
+}
+
+void dae::SpriteComponent::Reset()
+{
+	m_AccuSec = 0;
+}
+
+float dae::SpriteComponent::GetSpriteTime()
+{
+	return (m_Sprite.columns * m_Sprite.rows * m_Sprite.frameSec);
 }

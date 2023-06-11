@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <glm/ext/vector_float3.hpp>
 
 namespace dae
@@ -29,5 +30,6 @@ public:
 	virtual void Initialize(){}
 	virtual void Update(const float) {}
 	virtual void Render() const {}
+	virtual void PostRender() const {}
 	virtual void FixedUpdate(const float){}
 };

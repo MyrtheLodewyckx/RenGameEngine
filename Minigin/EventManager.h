@@ -12,6 +12,7 @@ namespace dae
 
 	class EventManager : public Singleton<EventManager>
 	{
+		int m_Amt{};
 	public:
 		void AddEvent(Event* e);
 		static Event* GetEvent();
