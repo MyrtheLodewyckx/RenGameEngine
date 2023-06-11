@@ -20,6 +20,10 @@ protected:
 public:
 	Physics(dae::GameObject* go) ;
 	~Physics() = default;
+	Physics(const Physics& other) = delete;
+	Physics(Physics&& other) noexcept = delete;
+	Physics& operator=(const Physics& other) = delete;
+	Physics& operator=(Physics&& other)	noexcept = delete;
 	int GetDirection() const { return m_CurrentDirection; }
 	virtual void SetDimensions(int width, int height);
 };

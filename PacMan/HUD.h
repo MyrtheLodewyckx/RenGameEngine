@@ -22,6 +22,10 @@ class HUD final: public Component
 public:
 	HUD(dae::GameObject* go);
 	~HUD() override = default;
+	HUD(const HUD& other) = delete;
+	HUD(HUD&& other) noexcept = delete;
+	HUD& operator=(const HUD& other) = delete;
+	HUD& operator=(HUD&& other)	noexcept = delete;
 
 	virtual void Update(const float) override;
 	virtual void Render() const override;

@@ -12,7 +12,7 @@ enum class playerEvents
 
 class PlayerStatusComponent: public Component, public Observer<playerEvents,int>
 {
-	int m_Lives{ 3 };
+	int m_Lives{ 4 };
 	int m_Score{ 0 };
 
 	virtual void onNotify(playerEvents event, int amt) override;

@@ -27,4 +27,9 @@ public:
 	GhostMovement(dae::GameObject* go) : Physics(go) {}
 	virtual void Initialize() override;
 	virtual ~GhostMovement() override = default;
+	GhostMovement(const GhostMovement& other) = delete;
+	GhostMovement(GhostMovement&& other) noexcept = delete;
+	GhostMovement& operator=(const GhostMovement& other) = delete;
+	GhostMovement& operator=(GhostMovement&& other)	noexcept = delete;
+	void SetFlee(bool isFleeing);
 };

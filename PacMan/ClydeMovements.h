@@ -11,6 +11,10 @@ class ClydeMovement final : public GhostMovement
 public:
 	ClydeMovement(dae::GameObject* go) : GhostMovement(go) {}
 	~ClydeMovement() override {}
+	ClydeMovement(const ClydeMovement& other) = delete;
+	ClydeMovement(ClydeMovement&& other) noexcept = delete;
+	ClydeMovement& operator=(const ClydeMovement& other) = delete;
+	ClydeMovement& operator=(ClydeMovement&& other)	noexcept = delete;
 	virtual void Update(const float) override;
 	virtual void FixedUpdate(const float) override;
 };

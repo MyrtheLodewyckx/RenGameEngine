@@ -32,6 +32,10 @@ namespace dae
 		bool m_IsRendering = true;
 		SpriteComponent(dae::GameObject* go) : Component(go) {}
 		~SpriteComponent() = default;
+		SpriteComponent(const SpriteComponent& other) = delete;
+		SpriteComponent(SpriteComponent&& other) noexcept = delete;
+		SpriteComponent& operator=(const SpriteComponent& other) = delete;
+		SpriteComponent& operator=(SpriteComponent&& other)	noexcept = delete;
 
 		virtual void Update(const float) override;
 		virtual void Render() const override;

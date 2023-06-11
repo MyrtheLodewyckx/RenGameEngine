@@ -3,16 +3,7 @@
 #include <string>
 #include <vector>
 
-enum SoundId
-{
-	PLAYER_DIES,
-	MUNCH_1,
-	MUNCH_2,
-	EAT_FRUIT,
-	EAT_GHOST,
-	POWER_PELLET,
-	INTERMISSION
-};
+
 
 class AudioClip
 {
@@ -30,15 +21,11 @@ public:
 	std::string GetPath() { return m_Path; }
 };
 
+inline std::vector<AudioClip> clips
+{};
 
 class sound_system
 {
-protected:
-	static const int MAX_CLIPS;
-	static int m_Head;
-	static int m_Tail;
-	static std::vector<AudioClip*> m_Clips;
-
 public:
 	virtual void Play(const int, const int) = 0;
 	virtual void Update() = 0;

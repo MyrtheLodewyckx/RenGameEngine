@@ -44,6 +44,11 @@ void Ghost::Update(const float deltaTime)
 			m_IsVulnerable = false;
 			m_ScoreValue = 200;
 			m_pSprite->SetSprite(m_SidewaysSprite, m_Width, m_Height, SDL_FLIP_HORIZONTAL);
+			auto ai = dynamic_pointer_cast<GhostMovement>(m_pMovementRef);
+			if (ai)
+			{
+				ai->SetFlee(false);
+			}
 		}
 		else if (m_Timer >= maxVulnerableTime - 3.f)
 			m_pSprite->SetSprite(m_VulnerableEndSprite, m_Width, m_Height);
@@ -74,6 +79,11 @@ void Ghost::Update(const float deltaTime)
 	{
 		if(e->ID == (int)PacManEvents::POWER_PELLET_EAT)
 		{
+			auto ai = dynamic_pointer_cast<GhostMovement>(m_pMovementRef);
+			if(ai)
+			{
+				ai->SetFlee(true);
+			}
 			m_IsVulnerable = true;
 			m_pSprite->SetSprite(m_VulnerableSprite, m_Width, m_Height);
 		}

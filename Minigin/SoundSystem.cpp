@@ -8,27 +8,16 @@
 null_sound_system AudioServiceLocator::default_instance;
 sound_system* AudioServiceLocator::ss_instance = &default_instance;
 
-const int sound_system::MAX_CLIPS = 30;
-int sound_system::m_Head = 0;
-int sound_system::m_Tail = 0;
-std::vector<AudioClip*> sound_system::m_Clips{};
-
-AudioClip clips[]
-{
-	{int(PLAYER_DIES),"../Data/SoundEffects/Death.wav"},
-	{int(MUNCH_1),"../Data/SoundEffects/Munch_1.wav"},
-	{int(MUNCH_2),"../Data/SoundEffects/Munch_2.wav"},
-	{int(EAT_FRUIT),"../Data/SoundEffects/Eat_Fruit.wav" },
-	{int(EAT_GHOST),"../Data/SoundEffects/Eat_Ghost.wav" },
-	{int(POWER_PELLET),"../Data/SoundEffects/Power_Pellet.wav" },
-	{int(INTERMISSION),"../Data/SoundEffects/Intermission.wav" }
-};
-
 
 //PIMPL
 class sdl_sound_system::SDLImpl
 {
-	Mix_Chunk* m_ChunkPtrs[sizeof(clips) / sizeof(AudioClip)]{};
+	const int MAX_CLIPS{30};
+	int m_Head{};
+	int m_Tail{};
+	std::vector<AudioClip*> m_Clips;
+
+	std::vector<Mix_Chunk*> m_ChunkPtrs{};
 	std::mutex lock{};
 	std::mutex sleepThreadMutex{};
 	std::condition_variable readyCondVar{};
@@ -39,7 +28,12 @@ class sdl_sound_system::SDLImpl
 
 
 public:
-	SDLImpl() { Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096); };
+	SDLImpl()
+	{
+		Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
+		m_ChunkPtrs.resize(clips.size());
+		m_Clips.resize(MAX_CLIPS);
+	}
 	~SDLImpl() { Mix_CloseAudio(); };
 
 	void Play(int ID, const int volume);
@@ -56,9 +50,8 @@ void sdl_sound_system::SDLImpl::HandleRequests()
 {
 	while (m_Head != m_Tail)
 	{
-		//bool r = ReadyFlag;
 		//std::unique_lock<std::mutex> ul(sleepThreadMutex);
-		//readyCondVar.wait(ul, [r]() {return m_Head != m_Tail; });
+		//readyCondVar.wait(ul, [&]() {return m_Head != m_Tail; });
 
 		int ID = m_Clips[m_Head]->GetId();
 
@@ -77,6 +70,7 @@ void sdl_sound_system::SDLImpl::HandleRequests()
 void sdl_sound_system::SDLImpl::Play(int ID, const int volume)
 {
 	assert((m_Tail + 1) % MAX_CLIPS != m_Head);
+	sleepThreadMutex.lock();
 
 	for (int i = m_Head; i != m_Tail; i = (i + 1) % MAX_CLIPS)
 	{
@@ -84,13 +78,13 @@ void sdl_sound_system::SDLImpl::Play(int ID, const int volume)
 			return;
 	}
 
-	sleepThreadMutex.lock();
+	
 	clips[ID].SetVolume(volume);
 	m_Clips[m_Tail] = &clips[ID];
 	m_Tail = (m_Tail + 1) % MAX_CLIPS;
 	sleepThreadMutex.unlock();
 
-	readyCondVar.notify_one();
+	//readyCondVar.notify_one();
 
 }
 
@@ -109,7 +103,6 @@ void sdl_sound_system::SDLImpl::Update()
 
 sdl_sound_system::sdl_sound_system()
 {
-	m_Clips.resize(MAX_CLIPS);
 	m_pImpl = new SDLImpl();
 }
 

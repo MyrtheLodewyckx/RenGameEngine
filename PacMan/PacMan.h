@@ -38,6 +38,10 @@ class PacMan: public Component
 public:
 	PacMan(dae::GameObject* go):Component(go){}
 	~PacMan() override;
+	PacMan(const PacMan& other) = delete;
+	PacMan(PacMan&& other) noexcept = delete;
+	PacMan& operator=(const PacMan& other) = delete;
+	PacMan& operator=(PacMan&& other)	noexcept = delete;
 	void SetDimentions(int width, int height);
 	void SetSprites(dae::Sprite sideWays, dae::Sprite vertical, dae::Sprite dying);
 

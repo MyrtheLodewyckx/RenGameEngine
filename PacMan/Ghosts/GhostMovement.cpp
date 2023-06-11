@@ -61,5 +61,10 @@ void GhostMovement::Initialize()
 	m_Speed = 80;
 }
 
+void GhostMovement::SetFlee(bool isFleeing)
+{
+	m_IsFleeing = isFleeing;
+}
+
 
 

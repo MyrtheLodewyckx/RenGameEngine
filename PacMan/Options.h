@@ -60,6 +60,10 @@ class Options : public dae::Scene
 public:
 	Options();
 	~Options() override = default;
+	Options(const Options& other) = delete;
+	Options(Options&& other) noexcept = delete;
+	Options& operator=(const Options& other) = delete;
+	Options& operator=(Options&& other)	noexcept = delete;
 
 	void Initialize() override;
 	void Update(const float deltaTime) override;

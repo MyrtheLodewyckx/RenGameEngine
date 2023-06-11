@@ -189,7 +189,7 @@
     <ClInclude Include="Ghosts\BlinkyMovements.h" />
     <ClInclude Include="Ghosts\Ghost.h" />
     <ClInclude Include="Ghosts\GhostMovement.h" />
-    <ClInclude Include="Ghosts\PathFinding.h" />
+    <ClInclude Include="PacManSounds.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="InkyMovements.h" />
     <ClInclude Include="Intermission.h" />

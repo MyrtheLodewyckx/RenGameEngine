@@ -13,6 +13,10 @@ class FruitSpawner :public Component
 public:
 	FruitSpawner(dae::GameObject* go) :Component(go){}
 	~FruitSpawner() override = default;
+	FruitSpawner(const FruitSpawner& other) = delete;
+	FruitSpawner(FruitSpawner&& other) noexcept = delete;
+	FruitSpawner& operator=(const FruitSpawner& other) = delete;
+	FruitSpawner& operator=(FruitSpawner&& other)	noexcept = delete;
 
 	void Update(const float) override;
 };

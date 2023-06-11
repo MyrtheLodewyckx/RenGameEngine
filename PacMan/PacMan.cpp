@@ -12,6 +12,7 @@
 #include "SpriteComponent.h"
 #include "GeometryUtils.h"
 #include "PacManEvents.h"
+#include "PacManSounds.h"
 #include "SoundSystem.h"
 #include "Ghosts/Ghost.h"
 
@@ -49,7 +50,7 @@ void PacMan::CheckForPellets()
 			if(scoreEvent->amt == 50)
 			{
 				sound_system* a = &AudioServiceLocator::get_sound_system();
-				a->Play(POWER_PELLET, 50);
+				a->Play((int)PacManSounds::POWER_PELLET, 50);
 
 				auto powerEvent = new POWER_PELLET_EAT();
 				dae::EventManager::GetInstance().AddEvent(powerEvent);
@@ -61,7 +62,7 @@ void PacMan::CheckForPellets()
 			m_PelletsRef.erase(std::remove(m_PelletsRef.begin(), m_PelletsRef.end(), m_PelletsRef[i]), m_PelletsRef.end());
 			{
 				sound_system* a = &AudioServiceLocator::get_sound_system();
-				a->Play((int)MUNCH_1 + m_MunchSound, 50);
+				a->Play((int)PacManSounds::MUNCH_1 + m_MunchSound, 50);
 				m_MunchSound = !m_MunchSound;
 				if(m_PelletsRef.empty())
 				{
@@ -88,7 +89,7 @@ void PacMan::CheckForGhosts()
 			if(ghost->GetIsVulnerable())
 			{
 				sound_system* a = &AudioServiceLocator::get_sound_system();
-				a->Play(EAT_GHOST, 50);
+				a->Play((int)PacManSounds::EAT_GHOST, 50);
 				ghost->Eat();
 				auto scoreEvent = new SCORE_CHANGE();
 				scoreEvent->amt = ghost->GetScoreValue();
@@ -100,7 +101,7 @@ void PacMan::CheckForGhosts()
 				m_pSprite->SetSprite(m_DyingSprite, m_Width, m_Height);
 				m_pSprite->Reset();
 				sound_system* a = &AudioServiceLocator::get_sound_system();
-				a->Play(PLAYER_DIES, 50);
+				a->Play((int)PacManSounds::PLAYER_DIES, 50);
 
 				auto livesEvent = new LIVES_CHANGE();
 				livesEvent->amt = -1;

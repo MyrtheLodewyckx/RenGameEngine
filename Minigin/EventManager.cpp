@@ -18,6 +18,7 @@ Event* dae::EventManager::GetEvent()
 
 void dae::EventManager::ProcessEvents()
 {
+	m_LastHeadEvent = m_Events[m_Head];
 
 	//CHECK IF WE HAD AN EVENT
 	if (m_LastHeadEvent)
@@ -32,5 +33,5 @@ void dae::EventManager::ProcessEvents()
 				m_Head = (m_Head + 1) % MAX_EVENTS;
 		}
 
-	m_LastHeadEvent = m_Events[m_Head];
+	
 }

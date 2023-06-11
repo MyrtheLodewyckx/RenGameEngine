@@ -16,6 +16,10 @@ class Fruit: public Component
 public:
 	Fruit(dae::GameObject* go): Component(go){}
 	~Fruit() override;
+	Fruit(const Fruit& other) = delete;
+	Fruit(Fruit&& other) noexcept = delete;
+	Fruit& operator=(const Fruit& other) = delete;
+	Fruit& operator=(Fruit&& other)	noexcept = delete;
 	virtual void Initialize() override;
 	virtual void Update(float delta) override;
 	static bool GetIsAlive();

@@ -10,11 +10,7 @@
 
 void MoveCommand::Execute(float x, float y, const float)
 {
-	if (m_IsDying)
-	{
-		*m_CurrentDirection = 0;
-		return;
-	}
+
 
 	if(!(abs(x) < 0.001f && abs(y) < 0.001f))
 	if (abs(x) > abs(y))
@@ -68,11 +64,6 @@ void MoveCommand::Execute(float x, float y, const float)
 
 void MoveLeftCommand::Execute()
 {
-	if (m_IsDying)
-	{
-		*m_CurrentDirection = 0;
-		return;
-	}
 
 	m_DirectionInput = CONNECTS_LEFT;
 
@@ -113,11 +104,7 @@ void MoveLeftCommand::Execute()
 
 void MoveRightCommand::Execute()
 {
-	if (m_IsDying)
-	{
-		*m_CurrentDirection = 0;
-		return;
-	}
+
 
 	m_DirectionInput = CONNECTS_RIGHT;
 
@@ -157,11 +144,7 @@ void MoveRightCommand::Execute()
 
 void MoveDownCommand::Execute()
 {
-	if (m_IsDying)
-	{
-		*m_CurrentDirection = 0;
-		return;
-	}
+
 
 	m_DirectionInput = CONNECTS_DOWN;
 
@@ -201,11 +184,7 @@ void MoveDownCommand::Execute()
 
 void MoveUpCommand::Execute()
 {
-	if (m_IsDying)
-	{
-		*m_CurrentDirection = 0;
-		return;
-	}
+
 
 	m_DirectionInput = CONNECTS_UP;
 
@@ -245,6 +224,9 @@ void MoveUpCommand::Execute()
 
 void PlayerPhysicsComponent::Update(const float  deltaTime)
 {
+	if (m_IsDying)
+		return;
+
 	int row{};
 	int column{};
 
@@ -335,11 +317,11 @@ void PlayerPhysicsComponent::SetDimensions(int width, int height)
 
 bool PlayerPhysicsComponent::GetIsDying()
 {
-	return m_pMoveCommand->m_IsDying;
+	return m_IsDying;
 }
 
 void PlayerPhysicsComponent::SetIsDying(bool isDying)
 {
-	m_pMoveCommand->m_IsDying = isDying;
+	m_IsDying = isDying;
 }
 

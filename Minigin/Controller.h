@@ -24,6 +24,10 @@ class Command;
 	public:
 		Controller();
 		~Controller() override;
+		Controller(const Controller& other) = delete;
+		Controller(Controller&& other) = delete;
+		Controller& operator=(const Controller& other) = delete;
+		Controller& operator=(Controller&& other) = delete;
 
 		virtual void ProcessInput(const float deltaTime) const override;
 		virtual void AddCommand(ControllerButton button, KeyState state, Command* pCommand) override;

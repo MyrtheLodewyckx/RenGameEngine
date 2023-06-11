@@ -24,7 +24,6 @@ public:
 	void SetSpeed(float speed);
 	int m_AvailableDirection{};
 	int* m_CurrentDirection{};
-	bool m_IsDying{ false };
 };
 
 class MoveUpCommand : public Command
@@ -40,7 +39,6 @@ public:
 	void SetSpeed(float speed);
 	int m_AvailableDirection{};
 	int* m_CurrentDirection{};
-	bool m_IsDying{ false };
 };
 
 class MoveDownCommand : public Command
@@ -56,7 +54,6 @@ public:
 	void SetSpeed(float speed);
 	int m_AvailableDirection{};
 	int* m_CurrentDirection{};
-	bool m_IsDying{ false };
 };
 
 class MoveLeftCommand : public Command
@@ -72,7 +69,6 @@ public:
 	void SetSpeed(float speed);
 	int m_AvailableDirection{};
 	int* m_CurrentDirection{};
-	bool m_IsDying{ false };
 };
 
 class MoveRightCommand : public Command
@@ -87,7 +83,6 @@ public:
 	void Execute() override;
 	int m_AvailableDirection{};
 	int* m_CurrentDirection{};
-	bool m_IsDying{ false };
 };
 
 class PlayerPhysicsComponent final : public Physics
@@ -98,10 +93,16 @@ class PlayerPhysicsComponent final : public Physics
 	MoveLeftCommand* m_pMoveLeftCommand{};
 	MoveRightCommand* m_pMoveRightCommand{};
 
+	bool m_IsDying{ false };
+
 public:
 	void Update(const float deltaTime) override;
 	PlayerPhysicsComponent(dae::GameObject* go);
 	~PlayerPhysicsComponent() override;
+	PlayerPhysicsComponent(const PlayerPhysicsComponent& other) = delete;
+	PlayerPhysicsComponent(PlayerPhysicsComponent&& other) noexcept = delete;
+	PlayerPhysicsComponent& operator=(const PlayerPhysicsComponent& other) = delete;
+	PlayerPhysicsComponent& operator=(PlayerPhysicsComponent&& other)	noexcept = delete;
 	void SetController(int playerIdx);
 	void SetDimensions(int width,int height) override;
 	bool GetIsDying();

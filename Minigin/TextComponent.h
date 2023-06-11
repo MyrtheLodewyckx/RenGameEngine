@@ -20,6 +20,10 @@ class textComponent: public Component
 public:
 	textComponent(dae::GameObject* go);
 	~textComponent();
+	textComponent(const textComponent& other) = delete;
+	textComponent(textComponent&& other) noexcept = delete;
+	textComponent& operator=(const textComponent& other) = delete;
+	textComponent& operator=(textComponent&& other)	noexcept = delete;
 
 	void SetFont(std::shared_ptr<dae::Font> font);
 	void SetText(const std::string& text);

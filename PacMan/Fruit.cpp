@@ -7,6 +7,7 @@
 
 #include "EventManager.h"
 #include "PacManEvents.h"
+#include "PacManSounds.h"
 #include "SoundSystem.h"
 
 Fruit::~Fruit()
@@ -44,8 +45,11 @@ void Fruit::Update(float)
 			SDL_Rect{ (int)m_GameObject->GetGlobalPos().x,(int)m_GameObject->GetGlobalPos().y,(int)m_pTexture->GetSize().x,(int)m_pTexture->GetSize().y }))
 		{
 			sound_system* a = &AudioServiceLocator::get_sound_system();
-			a->Play(EAT_FRUIT, 50);
+			a->Play((int)PacManSounds::EAT_FRUIT, 50);
 			auto scoreEvent = new SCORE_CHANGE();
+			scoreEvent->amt = 300;
+			dae::EventManager::GetInstance().AddEvent(scoreEvent);
+			scoreEvent = new SCORE_CHANGE();
 			scoreEvent->amt = 300;
 			dae::EventManager::GetInstance().AddEvent(scoreEvent);
 			m_IsAlive = false;

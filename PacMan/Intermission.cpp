@@ -2,6 +2,7 @@
 
 #include "LevelManager.h"
 #include "PacManInstance.h"
+#include "PacManSounds.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "SoundSystem.h"
@@ -38,7 +39,7 @@ void Intermission1::Update(const float deltaTime )
 				1,2,0.1f }, 20, 20);
 			blinkyPos.x = -20;
 			sound_system* a = &AudioServiceLocator::get_sound_system();
-			a->Play(INTERMISSION, 50);
+			a->Play((int)PacManSounds::INTERMISSION, 50);
 		}
 		m_PacMan->SetPosition(pacPos.x + chaseSpeed * deltaTime, pacPos.y, pacPos.z);
 		m_Ghost->SetPosition(blinkyPos.x + fleeSpeed * deltaTime, blinkyPos.y, blinkyPos.z);
@@ -72,5 +73,5 @@ void Intermission1::Initialize()
 
 
 	sound_system* a = &AudioServiceLocator::get_sound_system();
-	a->Play(INTERMISSION, 50);
+	a->Play((int)PacManSounds::INTERMISSION, 50);
 }

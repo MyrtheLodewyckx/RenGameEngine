@@ -49,6 +49,10 @@ class MainMenu: public dae::Scene
 public:
 	MainMenu();
 	~MainMenu() override;
+	MainMenu(const MainMenu& other) = delete;
+	MainMenu(MainMenu&& other) noexcept = delete;
+	MainMenu& operator=(const MainMenu& other) = delete;
+	MainMenu& operator=(MainMenu&& other)	noexcept = delete;
 
 	void Start() override;
 	void Initialize() override;

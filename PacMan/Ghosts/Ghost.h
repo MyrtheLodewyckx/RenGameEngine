@@ -28,6 +28,10 @@ class Ghost final : public Component
 public:
 	Ghost(dae::GameObject* go) : Component(go) {}
 	~Ghost() = default;
+	Ghost(const Ghost& other) = delete;
+	Ghost(Ghost&& other) noexcept = delete;
+	Ghost& operator=(const Ghost& other) = delete;
+	Ghost& operator=(Ghost&& other)	noexcept = delete;
 	void SetSprites(dae::Sprite vertical, dae::Sprite sideways);
 	void SetDimentions(float width, float height);
 	virtual void Initialize() override;

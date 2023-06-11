@@ -42,6 +42,10 @@ class PacManInstance final : public Component
 public:
 	explicit PacManInstance(dae::GameObject* go) :Component(go) {}
 	~PacManInstance() override = default;
+	PacManInstance(const PacManInstance& other) = delete;
+	PacManInstance(PacManInstance&& other) noexcept = delete;
+	PacManInstance& operator=(const PacManInstance& other) = delete;
+	PacManInstance& operator=(PacManInstance&& other)	noexcept = delete;
 
 	static void SetMode(mode mode);
 	static mode GetMode();
