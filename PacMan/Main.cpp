@@ -40,7 +40,7 @@ dae::Scene* load()
 
 int main(int, char* [])
 {
-	dae::Minigin engine("../Data/","PACMAN", 560, 760);
+	dae::Rengen engine("../Data/","PACMAN", 560, 760);
 
 
 	engine.Run(load);
