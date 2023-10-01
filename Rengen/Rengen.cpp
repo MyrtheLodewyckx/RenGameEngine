@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include "Minigin.h"
+#include "Rengen.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
@@ -46,7 +46,7 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 }
 
-dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName, int windowWidth, int windowHeight)
+dae::Rengen::Rengen(const std::string &dataPath, const std::string& windowName, int windowWidth, int windowHeight)
 {
 	PrintSDLVersion();
 	
@@ -73,7 +73,7 @@ dae::Minigin::Minigin(const std::string &dataPath, const std::string& windowName
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Minigin::~Minigin()
+dae::Rengen::~Rengen()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -81,7 +81,7 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<dae::Scene* ()>& load)
+void dae::Rengen::Run(const std::function<dae::Scene* ()>& load)
 {
 	//_CrtSetBreakAlloc(8335);
 	load();

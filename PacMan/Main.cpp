@@ -8,7 +8,7 @@
 #endif
 
 #include "Controller.h"
-#include "Minigin.h"
+#include "Rengen.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "Scene.h"
