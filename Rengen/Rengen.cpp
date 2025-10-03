@@ -83,51 +83,60 @@ dae::Rengen::~Rengen()
 
 void dae::Rengen::Run(const std::function<dae::Scene* ()>& load)
 {
-	//_CrtSetBreakAlloc(8335);
 	load();
+
+	// Init 
 	auto& eventManager = EventManager::GetInstance();
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+
+
 	auto ss = std::make_shared<sdl_sound_system>();
 	AudioServiceLocator::register_sound_system(ss.get());
 
 	sceneManager.Initialize();
 
-	float fixedTimeStep = 5.f;
-	auto lastTime = std::chrono::high_resolution_clock::now();
-	float lag = 0.0f;
+	using clock = std::chrono::steady_clock;
+	double fixedDt = 1.0 / 120.0;
+
+	double targetFrame = 1.0 / 144.0;
+
+	auto lastTime = clock::now();
+	double lag = 0.0;
 
 	bool doContinue = true;
-
 	while (doContinue)
 	{
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+		const auto currentTime = clock::now();
+		double frameSec = std::chrono::duration<double>(currentTime - lastTime).count();
 
-		doContinue = input.ProcessInput(deltaTime);
+		if (frameSec > 0.25) frameSec = 0.25;
+
+		lag += frameSec;
+
+		doContinue = input.ProcessInput(static_cast<float>(frameSec));
 		sceneManager.ProcessStateChange();
 
-		lag += deltaTime;
-		while (lag >= fixedTimeStep)
+		while (lag >= fixedDt)
 		{
-			sceneManager.FixedUpdate(fixedTimeStep);
-			lag -= fixedTimeStep;
+			sceneManager.FixedUpdate(static_cast<float>(fixedDt));
+			lag -= fixedDt;
 		}
 
-		sceneManager.Update(deltaTime);
+		sceneManager.Update(static_cast<float>(frameSec));
 		AudioServiceLocator::Update();
 		renderer.Render();
 
-
-		//sleep when frame is too fast
-		auto sleepTime = fixedTimeStep - deltaTime;
-		if (sleepTime > 0)
-			std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(sleepTime));
+		if (targetFrame > 0.0)
+		{
+			const auto frameElapsed = std::chrono::duration<double>(clock::now() - currentTime).count();
+			const double remaining = targetFrame - frameElapsed;
+			if (remaining > 0.0)
+				std::this_thread::sleep_for(std::chrono::duration<double>(remaining));
+		}
 
 		eventManager.ProcessEvents();
 		lastTime = currentTime;
 	}
-
-
 }
