@@ -14,7 +14,7 @@ int GetOpenGLDriverIndex()
         SDL_RendererInfo info{};
         if (SDL_GetRenderDriverInfo(i, &info) == 0)
         {
-            if (std::strcmp(info.name, "opengl") == 0)
+            if (auto name = info.name; name && std::strcmp(name, "opengl") == 0)
             {
                 openglIndex = i;
                 break; // stop at first match
