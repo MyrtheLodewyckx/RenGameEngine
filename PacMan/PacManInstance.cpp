@@ -113,7 +113,7 @@ void PacManInstance::Update(const float deltaTime)
 
 	}
 
-	auto e = dae::EventManager::GetEvent();
+	auto e = dae::EventManager::GetInstance().GetEvent();
 
 	if (e == nullptr)
 		return;

@@ -20,7 +20,7 @@ HUD::HUD(dae::GameObject* go)
 
 void HUD::Update(const float)
 {
-	auto e = dae::EventManager::GetEvent();
+	auto e = dae::EventManager::GetInstance().GetEvent();
 
 	if (e == nullptr)
 		return;
