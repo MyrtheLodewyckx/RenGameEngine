@@ -2,6 +2,10 @@
 #include "Singleton.h"
 #include "Events.h"
 
+#include <array>
+#include <cassert>
+#include <memory>
+
 namespace dae
 {
 
@@ -12,10 +16,12 @@ namespace dae
 		int m_Head{ 0 };
 		int m_Tail{ 0 };
 
-		Event* m_Events[MAX_EVENTS]{ nullptr };
+		std::array<std::unique_ptr<Event>, MAX_EVENTS> m_Events{};
 
 	public:
-		void AddEvent(Event* e);
+
+		// Preferred: pass ownership in
+		void AddEvent(std::unique_ptr<Event> e);
 		Event* GetEvent() const;
 		void ProcessEvents();
 		bool HasEvent() const { return m_Head != m_Tail; }

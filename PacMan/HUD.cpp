@@ -40,8 +40,8 @@ void HUD::Update(const float)
 		m_Lives += l->amt;
 			if(m_Lives == 0)
 			{
-				auto loseEvent = new LOSE();
-				dae::EventManager::GetInstance().AddEvent(loseEvent);
+				auto loseEvent = std::unique_ptr<LOSE>{new LOSE()};
+				dae::EventManager::GetInstance().AddEvent(std::move(loseEvent));
 			}
 		break;
 	}

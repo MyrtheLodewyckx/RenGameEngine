@@ -45,18 +45,18 @@ void PacMan::CheckForPellets()
 		auto h = m_pSprite->GetHeight();
 		if (m_PelletsRef[i] && GeoUtils::IsPointInRect(glm::vec2{pelletPos.x,pelletPos.y}, SDL_Rect{(int)pacPos.x,(int)pacPos.y,(int)w,(int)h}))
 		{
-			auto scoreEvent = new SCORE_CHANGE();
+			auto scoreEvent = std::unique_ptr<SCORE_CHANGE>{new SCORE_CHANGE()};
 			scoreEvent->amt = m_PelletsRef[i]->GetComponent<Pellet>()->m_Amt;
 			if(scoreEvent->amt == 50)
 			{
 				sound_system* a = &AudioServiceLocator::get_sound_system();
 				a->Play((int)PacManSounds::POWER_PELLET, 50);
 
-				auto powerEvent = new POWER_PELLET_EAT();
-				dae::EventManager::GetInstance().AddEvent(powerEvent);
+				auto powerEvent = std::unique_ptr<POWER_PELLET_EAT>{ new POWER_PELLET_EAT()};
+				dae::EventManager::GetInstance().AddEvent(std::move(powerEvent));
 			}
 
-			dae::EventManager::GetInstance().AddEvent(scoreEvent);
+			dae::EventManager::GetInstance().AddEvent(std::move(scoreEvent));
 			m_PelletsRef[i]->remove();
 			++m_PelletsEaten;
 			m_PelletsRef.erase(std::remove(m_PelletsRef.begin(), m_PelletsRef.end(), m_PelletsRef[i]), m_PelletsRef.end());
@@ -66,8 +66,8 @@ void PacMan::CheckForPellets()
 				m_MunchSound = !m_MunchSound;
 				if(m_PelletsRef.empty())
 				{
-					auto WinEvent = new WIN();
-					dae::EventManager::GetInstance().AddEvent(WinEvent);
+					auto WinEvent = std::unique_ptr<WIN>{new WIN()};
+					dae::EventManager::GetInstance().AddEvent(std::move(WinEvent));
 				}
 
 			}
@@ -91,9 +91,9 @@ void PacMan::CheckForGhosts()
 				sound_system* a = &AudioServiceLocator::get_sound_system();
 				a->Play((int)PacManSounds::EAT_GHOST, 50);
 				ghost->Eat();
-				auto scoreEvent = new SCORE_CHANGE();
+				auto scoreEvent = std::unique_ptr<SCORE_CHANGE>{new SCORE_CHANGE()};
 				scoreEvent->amt = ghost->GetScoreValue();
-				dae::EventManager::GetInstance().AddEvent(scoreEvent);
+				dae::EventManager::GetInstance().AddEvent(std::move(scoreEvent));
 			}
 			else
 			{
@@ -103,9 +103,9 @@ void PacMan::CheckForGhosts()
 				sound_system* a = &AudioServiceLocator::get_sound_system();
 				a->Play((int)PacManSounds::PLAYER_DIES, 50);
 
-				auto livesEvent = new LIVES_CHANGE();
+				auto livesEvent = std::unique_ptr<LIVES_CHANGE>{new LIVES_CHANGE()};
 				livesEvent->amt = -1;
-				dae::EventManager::GetInstance().AddEvent(livesEvent);
+				dae::EventManager::GetInstance().AddEvent(std::move(livesEvent));
 			}
 		}
 	}

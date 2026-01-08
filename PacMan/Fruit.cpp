@@ -46,12 +46,12 @@ void Fruit::Update(float)
 		{
 			sound_system* a = &AudioServiceLocator::get_sound_system();
 			a->Play((int)PacManSounds::EAT_FRUIT, 50);
-			auto scoreEvent = new SCORE_CHANGE();
+			auto scoreEvent = std::unique_ptr<SCORE_CHANGE>{ new SCORE_CHANGE()};
 			scoreEvent->amt = 300;
-			dae::EventManager::GetInstance().AddEvent(scoreEvent);
-			scoreEvent = new SCORE_CHANGE();
+			dae::EventManager::GetInstance().AddEvent(std::move(scoreEvent));
+			scoreEvent = std::unique_ptr<SCORE_CHANGE>{ new SCORE_CHANGE() };
 			scoreEvent->amt = 300;
-			dae::EventManager::GetInstance().AddEvent(scoreEvent);
+			dae::EventManager::GetInstance().AddEvent(std::move(scoreEvent));
 			m_IsAlive = false;
 			m_GameObject->remove();
 		}
